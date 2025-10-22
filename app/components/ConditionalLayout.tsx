@@ -10,14 +10,14 @@ interface ConditionalLayoutProps {
 export default function ConditionalLayout({ children }: ConditionalLayoutProps) {
   const pathname = usePathname();
   
-  // Сторінки аутентифікації, які не повинні мати Layout
-  const authPages = ['/auth/signin', '/auth/signup', '/auth/forgot-password'];
+  // Сторінки, які не повинні мати Layout
+  const noLayoutPages = ['/auth/signin', '/auth/signup', '/auth/forgot-password', '/recipes'];
   
-  // Перевіряємо чи поточний шлях є сторінкою аутентифікації
-  const isAuthPage = authPages.includes(pathname);
+  // Перевіряємо чи поточний шлях не повинен мати Layout
+  const shouldHideLayout = noLayoutPages.includes(pathname);
   
-  // Якщо це сторінка аутентифікації - показуємо тільки children
-  if (isAuthPage) {
+  // Якщо це сторінка без Layout - показуємо тільки children
+  if (shouldHideLayout) {
     return <>{children}</>;
   }
   

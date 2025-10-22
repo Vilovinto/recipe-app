@@ -54,12 +54,12 @@ export default function SignInPage() {
     <div className="min-h-screen bg-[#2D2726] flex">
       {/* Left Side - Login Form */}
       <div className="flex-1 flex items-center justify-center px-4 sm:px-6 lg:px-8">
-        <div className="max-w-md w-full space-y-8">
+        <div className="max-w-md w-full space-y-10">
           {/* Logo */}
           <Logo />
 
           {/* Welcome Section */}
-          <div className="space-y-6">
+          <div className="space-y-8">
             <WelcomeSection />
 
             {/* Login Form */}

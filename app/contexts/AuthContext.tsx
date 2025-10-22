@@ -49,7 +49,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (user) {
         // Зберігаємо токен в cookies для middleware
         const token = await user.getIdToken();
-        document.cookie = `firebase-auth-token=${token}; path=/; max-age=3600; secure; samesite=strict`;
+        document.cookie = `firebase-auth-token=${token}; path=/; max-age=3600; samesite=lax`;
 
         // Завантажуємо додаткові дані користувача з Firestore
         try {
@@ -84,7 +84,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       } else {
         // Видаляємо токен з cookies при logout
         document.cookie =
-          'firebase-auth-token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+          'firebase-auth-token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; samesite=lax';
         setAppUser(null);
       }
 
@@ -148,7 +148,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const logout = async () => {
-    await signOut(auth);
+    try {
+      console.log('Logging out...');
+      await signOut(auth);
+      console.log('SignOut completed');
+      
+      // Видаляємо токен з cookies перед перенаправленням
+      document.cookie =
+        'firebase-auth-token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; samesite=lax';
+      console.log('Cookie cleared');
+      
+      // Перенаправляємо на сторінку входу після logout
+      window.location.href = '/auth/signin';
+      console.log('Redirecting to signin');
+    } catch (error) {
+      console.error('Logout error:', error);
+    }
   };
 
   const value = {
