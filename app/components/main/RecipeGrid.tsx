@@ -43,15 +43,19 @@ export default function RecipeGrid({
   }
 
   return (
-    <div className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 ${className}`}>
-      {recipes.map((recipe) => (
-        <RecipeCard
-          key={recipe.id}
-          recipe={recipe}
-          onEdit={onEdit}
-          onDelete={onDelete}
-          isOwner={currentUserId === recipe.userId}
-        />
+    <div className={`flex flex-col gap-8 ${className}`}>
+      {Array.from({ length: Math.ceil(recipes.length / 3) }).map((_, rowIndex) => (
+        <div key={rowIndex} className="flex flex-row items-start gap-8">
+          {recipes.slice(rowIndex * 3, (rowIndex + 1) * 3).map((recipe) => (
+            <RecipeCard
+              key={recipe.id}
+              recipe={recipe}
+              onEdit={onEdit}
+              onDelete={onDelete}
+              isOwner={currentUserId === recipe.userId}
+            />
+          ))}
+        </div>
       ))}
     </div>
   );

@@ -1,5 +1,5 @@
-import Link from 'next/link';
-import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { useState, useEffect, useRef } from 'react';
 import { Recipe } from '../../types';
 
 interface RecipeCardProps {
@@ -17,7 +17,10 @@ export default function RecipeCard({
   isOwner = false,
   className = '' 
 }: RecipeCardProps) {
+  const router = useRouter();
   const [showMenu, setShowMenu] = useState(false);
+  const [showActionMenu, setShowActionMenu] = useState(false);
+  const actionMenuRef = useRef<HTMLDivElement>(null);
 
   const handleMenuToggle = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -39,11 +42,37 @@ export default function RecipeCard({
     setShowMenu(false);
   };
 
+  const handleActionMenuToggle = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setShowActionMenu(!showActionMenu);
+  };
+
+  const handleCardClick = () => {
+    // Зберігаємо дані рецепту в sessionStorage для передачі на сторінку деталей
+    sessionStorage.setItem('currentRecipe', JSON.stringify(recipe));
+    router.push(`/recipes/${recipe.id}`);
+  };
+
+  // Закриваємо action menu при кліку поза ним
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (actionMenuRef.current && !actionMenuRef.current.contains(event.target as Node)) {
+        setShowActionMenu(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
   return (
-    <div className={`relative bg-white/16 border border-[rgba(230,216,214,0.2)] rounded-lg overflow-hidden group ${className}`}>
-      <Link href={`/recipes/${recipe.id}`} className="block">
+    <div className={`relative w-[330.67px] h-[328px] bg-[rgba(255,255,255,0.16)] border-[1.5px] border-[rgba(230,216,214,0.2)] rounded-lg overflow-visible group cursor-pointer ${className}`}>
+      <div onClick={handleCardClick} className="block h-full">
         {/* Recipe Image */}
-        <div className="w-full h-40 relative">
+        <div className="w-full h-[164px] relative">
           {recipe.image ? (
             <img
               src={recipe.image}
@@ -68,7 +97,7 @@ export default function RecipeCard({
         </div>
 
         {/* Recipe Content */}
-        <div className="p-4 space-y-4">
+        <div className="p-4 h-[164px] flex flex-col justify-between">
           {/* Title and Rating */}
           <div className="flex items-start justify-between gap-1.5">
             <div className="flex-1 space-y-2">
@@ -102,7 +131,7 @@ export default function RecipeCard({
             </div>
           </div>
 
-          {/* Prep Time Buttons */}
+          {/* Prep Time Buttons and Action Menu */}
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <button className="px-4 py-1.5 bg-[#FFE478] text-[#0D0402] rounded-lg font-semibold text-[15px] leading-5 font-['Fira_Sans']">
@@ -116,60 +145,46 @@ export default function RecipeCard({
               </button>
             </div>
             
-            {/* Menu Button */}
-            {isOwner && (
-              <div className="relative">
-                <button
-                  onClick={handleMenuToggle}
-                  className="w-8 h-8 border border-[rgba(182,160,145,0.2)] rounded-lg flex items-center justify-center hover:border-[#FFE478] transition-colors"
-                >
-                  <svg
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="text-[#E6D8D6]"
-                  >
-                    <path
-                      d="M12 13C12.5523 13 13 12.5523 13 12C13 11.4477 12.5523 11 12 11C11.4477 11 11 11.4477 11 12C11 12.5523 11.4477 13 12 13Z"
-                      fill="currentColor"
-                    />
-                    <path
-                      d="M12 6C12.5523 6 13 5.55228 13 5C13 4.44772 12.5523 4 12 4C11.4477 4 11 4.44772 11 5C11 5.55228 11.4477 6 12 6Z"
-                      fill="currentColor"
-                    />
-                    <path
-                      d="M12 20C12.5523 20 13 19.5523 13 19C13 18.4477 12.5523 18 12 18C11.4477 18 11 18.4477 11 19C11 19.5523 11.4477 20 12 20Z"
-                      fill="currentColor"
-                    />
-                  </svg>
-                </button>
-
-                {/* Dropdown Menu */}
-                {showMenu && (
-                  <div className="absolute right-0 top-full mt-1 w-24 bg-[#FFE478] rounded-lg shadow-lg z-10">
-                    <div className="py-1">
-                      <button
-                        onClick={handleEdit}
-                        className="w-full px-3 py-1.5 text-[#2D2726] text-base font-['Fira_Sans'] hover:bg-white/30 transition-colors text-center"
-                      >
-                        Edit
-                      </button>
-                      <button
-                        onClick={handleDelete}
-                        className="w-full px-3 py-1.5 text-[#2D2726] text-base font-['Fira_Sans'] hover:bg-white/30 transition-colors text-center"
-                      >
-                        Delete
-                      </button>
-                    </div>
+            {/* Three Dots Button */}
+            <div className="relative z-10" ref={actionMenuRef}>
+              <button
+                onClick={handleActionMenuToggle}
+                className="w-8 h-8 border-[1.5px] border-[#FFE478] rounded-lg flex items-center justify-center hover:bg-[#FFE478]/10 transition-colors"
+              >
+                <div className="w-5 h-5 relative">
+                  <div className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 w-3 h-3">
+                    <div className="absolute left-0 top-1/2 transform -translate-y-1/2 w-1 h-1 bg-[#FFE478] rounded-full"></div>
+                    <div className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 w-1 h-1 bg-[#FFE478] rounded-full"></div>
+                    <div className="absolute right-0 top-1/2 transform -translate-y-1/2 w-1 h-1 bg-[#FFE478] rounded-full"></div>
                   </div>
-                )}
-              </div>
-            )}
+                </div>
+              </button>
+
+              {/* Action Menu */}
+              {showActionMenu && (
+                          <div className="absolute right-0 top-full mt-1 w-[102px] h-[64px] bg-[#FFE478] rounded-lg shadow-lg z-99999 flex flex-col items-start p-1 gap-2">
+                  <button 
+                    onClick={handleEdit}
+                    className="flex flex-row justify-center items-center px-1 py-0.5 gap-2.5 w-[94px] h-6 bg-linear-to-b from-white/30 to-white/30 rounded hover:bg-white/40 transition-colors"
+                  >
+                    <span className="w-[86px] h-5 font-['Fira_Sans'] font-normal text-base leading-5 text-[#2D2726]">
+                      Edit
+                    </span>
+                  </button>
+                  <button 
+                    onClick={handleDelete}
+                    className="flex flex-row justify-center items-center px-1 py-0.5 gap-2.5 w-[94px] h-6 rounded hover:bg-white/20 transition-colors"
+                  >
+                    <span className="w-[86px] h-5 font-['Fira_Sans'] font-normal text-base leading-5 text-[#2D2726]">
+                      Delete
+                    </span>
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
         </div>
-      </Link>
+      </div>
     </div>
   );
 }

@@ -7,6 +7,7 @@ import { Recipe } from '../types';
 import Header from '../components/main/Header';
 import Sidebar from '../components/main/Sidebar';
 import RecipeGrid from '../components/main/RecipeGrid';
+import RecipeCard from '../components/main/RecipeCard';
 import Pagination from '../components/main/Pagination';
 import RecipeCardSkeleton from '../components/RecipeCardSkeleton';
 import toast from 'react-hot-toast';
@@ -33,8 +34,45 @@ export default function RecipesPage() {
   ];
 
   useEffect(() => {
-    loadRecipes();
-  }, [selectedCategories, prepTimeFilter, currentPage]);
+    // Додаємо приклад рецепту з даними поточного користувача
+    const exampleRecipe: Recipe = {
+      id: 'example-1',
+      title: 'Exquisite Lemon Drizzle Cake',
+      description: 'Discover the secrets to making the perfect lemon drizzle cake with this easy-to-follow recipe.',
+      category: 'dessert',
+      cuisine: 'Baking, Lemon',
+      prepTime: 60,
+      rating: 4.8,
+      ingredients: [
+        '1 cup all-purpose flour',
+        '1/2 cup sugar',
+        '1/4 cup unsalted butter',
+        '2 eggs',
+        '1 lemon, zested and juiced',
+        '1 tsp baking powder',
+        '1/4 tsp salt'
+      ],
+      instructions: [
+        'Preheat your oven to 350° F (175°C).',
+        'In a bowl, mix flour, baking powder, and salt.',
+        'In another bowl, cream butter and sugar until light and fluffy.',
+        'Add eggs one at a time, beating well after each addition.',
+        'Stir in lemon zest and juice.',
+        'Gradually add dry ingredients to wet ingredients, mixing until just combined.',
+        'Pour batter into a greased and floured loaf pan.',
+        'Bake for 45-50 minutes or until a toothpick inserted into the center comes out clean.',
+        'Let the cake cool before drizzling with a lemon glaze.'
+      ],
+      image: 'https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=800&h=600&fit=crop',
+      author: user?.displayName || user?.email || 'Anonymous User',
+      userId: user?.uid || 'example-user',
+      createdAt: new Date(),
+      updatedAt: new Date()
+    };
+    
+    setRecipes([exampleRecipe]);
+    setLoading(false);
+  }, [user]);
 
   const loadRecipes = async () => {
     setLoading(true);
@@ -136,7 +174,7 @@ export default function RecipesPage() {
           <div className="flex items-start justify-between">
             <div className="space-y-1">
               <h1 className="text-white font-semibold text-xl leading-5 font-['Fira_Sans']">
-                Pasta Carbonara
+                All Recipes
               </h1>
               <p className="text-[rgba(255,255,255,0.5)] text-sm leading-5 font-['Fira_Sans']">
                 {recipes.length} recipes found
@@ -159,9 +197,13 @@ export default function RecipesPage() {
 
           {/* Recipe Grid */}
           {loading ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {Array.from({ length: 6 }).map((_, index) => (
-                <RecipeCardSkeleton key={index} />
+            <div className="flex flex-col gap-8">
+              {Array.from({ length: 2 }).map((_, rowIndex) => (
+                <div key={rowIndex} className="flex flex-row items-start gap-8">
+                  {Array.from({ length: 3 }).map((_, colIndex) => (
+                    <RecipeCardSkeleton key={`${rowIndex}-${colIndex}`} />
+                  ))}
+                </div>
               ))}
             </div>
           ) : (
@@ -175,7 +217,7 @@ export default function RecipesPage() {
 
           {/* Pagination */}
           {!loading && recipes.length > 0 && (
-            <div className="flex justify-center">
+            <div className="flex justify-start">
               <Pagination
                 currentPage={currentPage}
                 totalPages={totalPages}

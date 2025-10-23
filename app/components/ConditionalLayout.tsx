@@ -13,8 +13,11 @@ export default function ConditionalLayout({ children }: ConditionalLayoutProps) 
   // Сторінки, які не повинні мати Layout
   const noLayoutPages = ['/auth/signin', '/auth/signup', '/auth/forgot-password', '/recipes'];
   
+  // Перевіряємо чи це динамічний маршрут /recipes/[id]
+  const isRecipeDetailPage = pathname.startsWith('/recipes/') && pathname !== '/recipes';
+  
   // Перевіряємо чи поточний шлях не повинен мати Layout
-  const shouldHideLayout = noLayoutPages.includes(pathname);
+  const shouldHideLayout = noLayoutPages.includes(pathname) || isRecipeDetailPage;
   
   // Якщо це сторінка без Layout - показуємо тільки children
   if (shouldHideLayout) {
