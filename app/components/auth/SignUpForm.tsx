@@ -15,10 +15,10 @@ interface SignUpFormProps {
   className?: string;
 }
 
-export default function SignUpForm({ 
-  onSubmit, 
-  loading = false, 
-  className = '' 
+export default function SignUpForm({
+  onSubmit,
+  loading = false,
+  className = '',
 }: SignUpFormProps) {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -33,7 +33,7 @@ export default function SignUpForm({
       lastName,
       email,
       password,
-      confirmPassword
+      confirmPassword,
     });
   };
 

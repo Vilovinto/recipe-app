@@ -12,6 +12,7 @@ interface SidebarProps {
   customMaxTime: string;
   onCustomMinTimeChange: (value: string) => void;
   onCustomMaxTimeChange: (value: string) => void;
+  topPrepTimeFilter?: string;
   className?: string;
 }
 
@@ -25,14 +26,15 @@ export default function Sidebar({
   customMaxTime,
   onCustomMinTimeChange,
   onCustomMaxTimeChange,
-  className = ''
+  topPrepTimeFilter = '',
+  className = '',
 }: SidebarProps) {
   const prepTimeOptions = [
     'Under 15 mins',
     '15-30 mins',
     '30-60 mins',
     'Over 1 hr',
-    'Custom'
+    'Custom',
   ];
 
   return (
@@ -43,12 +45,12 @@ export default function Sidebar({
           Filter by Category
         </h3>
         <div className="space-y-3">
-          {categories.map((category) => (
+          {categories.map(category => (
             <FilterCheckbox
               key={category}
               label={category}
               checked={selectedCategories.includes(category)}
-              onChange={(checked) => onCategoryChange(category, checked)}
+              onChange={checked => onCategoryChange(category, checked)}
             />
           ))}
         </div>
@@ -63,12 +65,13 @@ export default function Sidebar({
           Filter by Prep Time
         </h3>
         <div className="space-y-3">
-          {prepTimeOptions.map((option) => (
+          {prepTimeOptions.map(option => (
             <div key={option}>
               <FilterRadio
                 label={option}
                 checked={prepTimeFilter === option}
                 onChange={() => onPrepTimeChange(option)}
+                disabled={!!topPrepTimeFilter}
               />
               {option === 'Custom' && prepTimeFilter === 'Custom' && (
                 <div className="ml-8 mt-2">

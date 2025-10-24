@@ -17,12 +17,15 @@ export default function InputField({
   onChange,
   placeholder,
   showPasswordToggle = false,
-  className = ''
+  className = '',
 }: InputFieldProps) {
   const [showPassword, setShowPassword] = useState(false);
-  const inputType = showPasswordToggle && type === 'password' 
-    ? (showPassword ? 'text' : 'password') 
-    : type;
+  const inputType =
+    showPasswordToggle && type === 'password'
+      ? showPassword
+        ? 'text'
+        : 'password'
+      : type;
 
   return (
     <div className={`space-y-3 ${className}`}>
@@ -33,7 +36,7 @@ export default function InputField({
         <input
           type={inputType}
           value={value}
-          onChange={(e) => onChange(e.target.value)}
+          onChange={e => onChange(e.target.value)}
           className="w-full h-14 px-4 bg-transparent border border-[#6D6665] rounded-xl text-white placeholder-[#8A8F93] font-['Fira_Sans'] text-lg focus:outline-none focus:border-[#FFE478] transition-colors"
           placeholder={placeholder}
         />

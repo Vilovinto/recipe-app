@@ -4,19 +4,15 @@ interface RecipeImageProps {
   className?: string;
 }
 
-export default function RecipeImage({ 
-  src, 
-  alt = "Recipe", 
-  className = '' 
+export default function RecipeImage({
+  src,
+  alt = 'Recipe',
+  className = '',
 }: RecipeImageProps) {
   if (src) {
     return (
       <div className={`w-full h-full rounded-3xl overflow-hidden ${className}`}>
-        <img 
-          src={src} 
-          alt={alt} 
-          className="w-full h-full object-cover"
-        />
+        <img src={src} alt={alt} className="w-full h-full object-cover" />
       </div>
     );
   }

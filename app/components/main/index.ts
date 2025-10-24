@@ -9,3 +9,5 @@ export { default as CustomTimeRange } from './CustomTimeRange';
 export { default as RecipeCard } from './RecipeCard';
 export { default as RecipeGrid } from './RecipeGrid';
 export { default as Pagination } from './Pagination';
+export { default as NewRecipeModal } from './NewRecipeModal';
+export { default as EditRecipeModal } from './EditRecipeModal';

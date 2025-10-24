@@ -5,7 +5,6 @@ import { useParams, useRouter } from 'next/navigation';
 import { useAuth } from '../../contexts/AuthContext';
 import { recipeService } from '../../lib/firebase-utils';
 import { Recipe } from '../../types';
-import Header from '../../components/main/Header';
 import toast from 'react-hot-toast';
 
 export default function RecipeDetailPage() {
@@ -17,7 +16,7 @@ export default function RecipeDetailPage() {
 
   useEffect(() => {
     if (params.id) {
-      // Спочатку перевіряємо sessionStorage для прикладу рецепту
+      // Спочатку перевіряємо sessionStorage для переданого рецепту
       const storedRecipe = sessionStorage.getItem('currentRecipe');
       if (storedRecipe) {
         try {
@@ -32,7 +31,19 @@ export default function RecipeDetailPage() {
           console.error('Error parsing stored recipe:', error);
         }
       }
-      
+
+      // Якщо немає в sessionStorage, перевіряємо localStorage для нових рецептів
+      const savedRecipes = JSON.parse(localStorage.getItem('userRecipes') || '[]');
+      const foundRecipe = savedRecipes.find((r: Recipe) => r.id === params.id);
+      if (foundRecipe) {
+        // Перетворюємо дати з рядків назад в Date об'єкти
+        foundRecipe.createdAt = new Date(foundRecipe.createdAt);
+        foundRecipe.updatedAt = new Date(foundRecipe.updatedAt);
+        setRecipe(foundRecipe);
+        setLoading(false);
+        return;
+      }
+
       // Якщо немає в sessionStorage, завантажуємо з Firebase
       loadRecipe(params.id as string);
     }
@@ -58,12 +69,6 @@ export default function RecipeDetailPage() {
     router.push('/recipes');
   };
 
-  const handleSearch = (query: string) => {
-    // Очищаємо sessionStorage при пошуку
-    sessionStorage.removeItem('currentRecipe');
-    router.push(`/recipes?search=${encodeURIComponent(query)}`);
-  };
-
   if (loading) {
     return (
       <div className="min-h-screen bg-[#2D2726] flex items-center justify-center">
@@ -82,9 +87,6 @@ export default function RecipeDetailPage() {
 
   return (
     <div className="min-h-screen bg-[#2D2726] px-12">
-      {/* Header */}
-      <Header onSearch={handleSearch} />
-
       {/* Article Page Headline with Author */}
       <div className="flex flex-col items-start py-6 gap-6 w-full max-w-[1344px] mx-auto">
         {/* Back Button */}
@@ -117,33 +119,49 @@ export default function RecipeDetailPage() {
 
         {/* Category */}
         <div className="w-full h-5 font-['Fira_Sans'] font-semibold text-[15px] leading-5 text-[#FFE478]">
-          Dessert, Baking, Lemon
+          {recipe.category}, {recipe.cuisine}
         </div>
 
         {/* Title */}
         <h1 className="w-full h-[52px] font-['Hepta_Slab'] font-medium text-[48px] leading-[52px] tracking-[-0.01em] text-[#E6D8D6]">
-          Exquisite Lemon Drizzle Cake
+          {recipe.title}
         </h1>
 
         {/* Description */}
         <p className="w-full h-6 font-['Fira_Sans'] font-normal text-xl leading-6 text-[#E6D8D6]">
-          Discover the secrets to making the perfect lemon drizzle cake with this easy-to-follow recipe.
+          {recipe.description}
         </p>
 
         {/* Image Section */}
         <div className="flex flex-col justify-center items-center py-6 gap-1.5 w-full h-[572px]">
           {/* Recipe Image */}
           <div className="w-full h-[502px] relative">
-            <img
-              src="https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=1344&h=502&fit=crop"
-              alt="Exquisite Lemon Drizzle Cake"
-              className="w-full h-full object-cover rounded-lg"
-            />
+            {recipe.image ? (
+              <img
+                src={recipe.image}
+                alt={recipe.title}
+                className="w-full h-full object-cover rounded-lg"
+              />
+            ) : (
+              <div className="w-full h-full bg-linear-to-br from-gray-300 to-gray-400 flex items-center justify-center rounded-lg">
+                <svg
+                  className="w-12 h-12 text-gray-500"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+              </div>
+            )}
           </div>
 
           {/* Image Caption */}
           <p className="w-full h-4 font-['Fira_Sans'] font-normal text-[13px] leading-4 text-[rgba(230,216,214,0.62)]">
-            A slice of lemon drizzle cake on a plate.
+            {recipe.title}
           </p>
         </div>
 
@@ -151,10 +169,10 @@ export default function RecipeDetailPage() {
         <div className="flex flex-col items-start gap-4 w-full h-[72px]">
           {/* Date */}
           <div className="w-full h-5 font-['Fira_Sans'] font-normal text-[15px] leading-5 text-[#E6D8D6]">
-            {recipe.createdAt.toLocaleDateString('en-US', { 
-              year: 'numeric', 
-              month: 'long', 
-              day: 'numeric' 
+            {recipe.createdAt.toLocaleDateString('en-US', {
+              year: 'numeric',
+              month: 'long',
+              day: 'numeric',
             })}
           </div>
 
@@ -164,7 +182,7 @@ export default function RecipeDetailPage() {
             <div className="w-9 h-9 relative">
               <div className="w-9 h-9 bg-linear-to-br from-blue-400 to-purple-500 rounded-full flex items-center justify-center">
                 <span className="text-white font-semibold text-sm">
-                  {user?.displayName?.charAt(0) || user?.email?.charAt(0) || 'U'}
+                  {recipe.author?.charAt(0) || 'U'}
                 </span>
               </div>
             </div>
@@ -172,10 +190,10 @@ export default function RecipeDetailPage() {
             {/* Author Info */}
             <div className="flex flex-col items-start w-[248px] h-8">
               <div className="w-[248px] h-4 font-['Fira_Sans'] font-semibold text-[13px] leading-4 text-[#E6D8D6]">
-                {user?.displayName || user?.email || 'Anonymous User'}
+                {recipe.author}
               </div>
               <div className="w-[248px] h-4 font-['Fira_Sans'] font-normal text-[13px] leading-4 text-[rgba(230,216,214,0.62)]">
-                Pastry Chef
+                Recipe Creator
               </div>
             </div>
           </div>
@@ -190,7 +208,10 @@ export default function RecipeDetailPage() {
             Introduction
           </h2>
           <p className="text-[#E6D8D6] font-['Fira_Sans'] font-normal text-base leading-6">
-            This lemon drizzle cake is a timeless classic that combines the tartness of lemons with the sweetness of sugar, creating a moist and flavorful dessert. Perfect for afternoon tea or as a delightful treat for any occasion.
+            This lemon drizzle cake is a timeless classic that combines the
+            tartness of lemons with the sweetness of sugar, creating a moist and
+            flavorful dessert. Perfect for afternoon tea or as a delightful
+            treat for any occasion.
           </p>
         </div>
 
@@ -203,75 +224,16 @@ export default function RecipeDetailPage() {
 
           {/* Ingredients List */}
           <div className="flex flex-col gap-2 w-full">
-            {/* Item 1 */}
-            <div className="flex flex-row items-center gap-1.5 w-full h-7">
-              <div className="w-6 h-6 relative">
-                <div className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 w-3 h-3 border-[1.5px] border-[#E6D8D6]"></div>
+            {recipe.ingredients.map((ingredient, index) => (
+              <div key={index} className="flex flex-row items-center gap-1.5 w-full h-7">
+                <div className="w-6 h-6 relative">
+                  <div className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 w-3 h-3 border-[1.5px] border-[#E6D8D6]"></div>
+                </div>
+                <span className="w-full h-7 font-['Fira_Sans'] font-normal text-[17px] leading-7 text-[#E6D8D6]">
+                  {ingredient}
+                </span>
               </div>
-              <span className="w-full h-7 font-['Fira_Sans'] font-normal text-[17px] leading-7 text-[#E6D8D6]">
-                1 cup all-purpose flour
-              </span>
-            </div>
-
-            {/* Item 2 */}
-            <div className="flex flex-row items-center gap-1.5 w-full h-7">
-              <div className="w-6 h-6 relative">
-                <div className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 w-3 h-3 border-[1.5px] border-[#E6D8D6]"></div>
-              </div>
-              <span className="w-full h-7 font-['Fira_Sans'] font-normal text-[17px] leading-7 text-[#E6D8D6]">
-                1/2 cup sugar
-              </span>
-            </div>
-
-            {/* Item 3 */}
-            <div className="flex flex-row items-center gap-1.5 w-full h-7">
-              <div className="w-6 h-6 relative">
-                <div className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 w-3 h-3 border-[1.5px] border-[#E6D8D6]"></div>
-              </div>
-              <span className="w-full h-7 font-['Fira_Sans'] font-normal text-[17px] leading-7 text-[#E6D8D6]">
-                1/4 cup unsalted butter
-              </span>
-            </div>
-
-            {/* Item 4 */}
-            <div className="flex flex-row items-center gap-1.5 w-full h-7">
-              <div className="w-6 h-6 relative">
-                <div className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 w-3 h-3 border-[1.5px] border-[#E6D8D6]"></div>
-              </div>
-              <span className="w-full h-7 font-['Fira_Sans'] font-normal text-[17px] leading-7 text-[#E6D8D6]">
-                2 eggs
-              </span>
-            </div>
-
-            {/* Item 5 */}
-            <div className="flex flex-row items-center gap-1.5 w-full h-7">
-              <div className="w-6 h-6 relative">
-                <div className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 w-3 h-3 border-[1.5px] border-[#E6D8D6]"></div>
-              </div>
-              <span className="w-full h-7 font-['Fira_Sans'] font-normal text-[17px] leading-7 text-[#E6D8D6]">
-                1 lemon, zested and juiced
-              </span>
-            </div>
-
-            {/* Item 6 */}
-            <div className="flex flex-row items-center gap-1.5 w-full h-7">
-              <div className="w-6 h-6 relative">
-                <div className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 w-3 h-3 border-[1.5px] border-[#E6D8D6]"></div>
-              </div>
-              <span className="w-full h-7 font-['Fira_Sans'] font-normal text-[17px] leading-7 text-[#E6D8D6]">
-                1 tsp baking powder
-              </span>
-            </div>
-
-            {/* Item 7 */}
-            <div className="flex flex-row items-center gap-1.5 w-full h-7">
-              <div className="w-6 h-6 relative">
-                <div className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 w-3 h-3 border-[1.5px] border-[#E6D8D6]"></div>
-              </div>
-              <span className="w-full h-7 font-['Fira_Sans'] font-normal text-[17px] leading-7 text-[#E6D8D6]">
-                1/4 tsp salt
-              </span>
-            </div>
+            ))}
           </div>
         </div>
 
@@ -284,95 +246,16 @@ export default function RecipeDetailPage() {
 
           {/* Instructions List */}
           <div className="flex flex-col gap-2 w-full">
-            {/* Step 1 */}
-            <div className="flex flex-row items-baseline gap-1.5 w-full h-7">
-              <span className="w-8 h-6 font-['Fira_Sans'] font-semibold text-[17px] leading-6 text-right text-[#E6D8D6] flex-none">
-                1.
-              </span>
-              <span className="w-[1306px] h-7 font-['Fira_Sans'] font-normal text-[17px] leading-7 text-[#E6D8D6] grow">
-                Preheat your oven to 350°F (175°C).
-              </span>
-            </div>
-
-            {/* Step 2 */}
-            <div className="flex flex-row items-baseline gap-1.5 w-full h-7">
-              <span className="w-8 h-6 font-['Fira_Sans'] font-semibold text-[17px] leading-6 text-right text-[#E6D8D6] flex-none">
-                2.
-              </span>
-              <span className="w-[1306px] h-7 font-['Fira_Sans'] font-normal text-[17px] leading-7 text-[#E6D8D6] grow">
-                In a bowl, mix flour, baking powder, and salt.
-              </span>
-            </div>
-
-            {/* Step 3 */}
-            <div className="flex flex-row items-baseline gap-1.5 w-full h-7">
-              <span className="w-8 h-6 font-['Fira_Sans'] font-semibold text-[17px] leading-6 text-right text-[#E6D8D6] flex-none">
-                3.
-              </span>
-              <span className="w-[1306px] h-7 font-['Fira_Sans'] font-normal text-[17px] leading-7 text-[#E6D8D6] grow">
-                In another bowl, cream butter and sugar until light and fluffy.
-              </span>
-            </div>
-
-            {/* Step 4 */}
-            <div className="flex flex-row items-baseline gap-1.5 w-full h-7">
-              <span className="w-8 h-6 font-['Fira_Sans'] font-semibold text-[17px] leading-6 text-right text-[#E6D8D6] flex-none">
-                4.
-              </span>
-              <span className="w-[1306px] h-7 font-['Fira_Sans'] font-normal text-[17px] leading-7 text-[#E6D8D6] grow">
-                Add eggs one at a time, beating well after each addition.
-              </span>
-            </div>
-
-            {/* Step 5 */}
-            <div className="flex flex-row items-baseline gap-1.5 w-full h-7">
-              <span className="w-8 h-6 font-['Fira_Sans'] font-semibold text-[17px] leading-6 text-right text-[#E6D8D6] flex-none">
-                5.
-              </span>
-              <span className="w-[1306px] h-7 font-['Fira_Sans'] font-normal text-[17px] leading-7 text-[#E6D8D6] grow">
-                Stir in lemon zest and juice.
-              </span>
-            </div>
-
-            {/* Step 6 */}
-            <div className="flex flex-row items-baseline gap-1.5 w-full h-7">
-              <span className="w-8 h-6 font-['Fira_Sans'] font-semibold text-[17px] leading-6 text-right text-[#E6D8D6] flex-none">
-                6.
-              </span>
-              <span className="w-[1306px] h-7 font-['Fira_Sans'] font-normal text-[17px] leading-7 text-[#E6D8D6] grow">
-                Gradually add dry ingredients to wet ingredients, mixing until just combined.
-              </span>
-            </div>
-
-            {/* Step 7 */}
-            <div className="flex flex-row items-baseline gap-1.5 w-full h-7">
-              <span className="w-8 h-6 font-['Fira_Sans'] font-semibold text-[17px] leading-6 text-right text-[#E6D8D6] flex-none">
-                7.
-              </span>
-              <span className="w-[1306px] h-7 font-['Fira_Sans'] font-normal text-[17px] leading-7 text-[#E6D8D6] grow">
-                Pour batter into a greased and floured loaf pan.
-              </span>
-            </div>
-
-            {/* Step 8 */}
-            <div className="flex flex-row items-baseline gap-1.5 w-full h-7">
-              <span className="w-8 h-6 font-['Fira_Sans'] font-semibold text-[17px] leading-6 text-right text-[#E6D8D6] flex-none">
-                8.
-              </span>
-              <span className="w-[1306px] h-7 font-['Fira_Sans'] font-normal text-[17px] leading-7 text-[#E6D8D6] grow">
-                Bake for 45-50 minutes or until a toothpick inserted into the center comes out clean.
-              </span>
-            </div>
-
-            {/* Step 9 */}
-            <div className="flex flex-row items-baseline gap-1.5 w-full h-7">
-              <span className="w-8 h-6 font-['Fira_Sans'] font-semibold text-[17px] leading-6 text-right text-[#E6D8D6] flex-none">
-                9.
-              </span>
-              <span className="w-[1306px] h-7 font-['Fira_Sans'] font-normal text-[17px] leading-7 text-[#E6D8D6] grow">
-                Let the cake cool before drizzling with a lemon glaze.
-              </span>
-            </div>
+            {recipe.instructions.map((instruction, index) => (
+              <div key={index} className="flex flex-row items-baseline gap-1.5 w-full h-7">
+                <span className="w-8 h-6 font-['Fira_Sans'] font-semibold text-[17px] leading-6 text-right text-[#E6D8D6] flex-none">
+                  {index + 1}.
+                </span>
+                <span className="w-[1306px] h-7 font-['Fira_Sans'] font-normal text-[17px] leading-7 text-[#E6D8D6] grow">
+                  {instruction}
+                </span>
+              </div>
+            ))}
           </div>
         </div>
       </div>

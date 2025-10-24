@@ -5,17 +5,17 @@ interface PaginationProps {
   className?: string;
 }
 
-export default function Pagination({ 
-  currentPage, 
-  totalPages, 
-  onPageChange, 
-  className = '' 
+export default function Pagination({
+  currentPage,
+  totalPages,
+  onPageChange,
+  className = '',
 }: PaginationProps) {
   const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
 
   return (
     <div className={`flex items-center gap-2 ${className}`}>
-      {pages.map((page) => (
+      {pages.map(page => (
         <button
           key={page}
           onClick={() => onPageChange(page)}
@@ -28,7 +28,7 @@ export default function Pagination({
           {page}
         </button>
       ))}
-      
+
       {/* Next Button */}
       <button
         onClick={() => onPageChange(currentPage + 1)}

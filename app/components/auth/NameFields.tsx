@@ -13,7 +13,7 @@ export default function NameFields({
   lastName,
   onFirstNameChange,
   onLastNameChange,
-  className = ''
+  className = '',
 }: NameFieldsProps) {
   return (
     <div className={`flex gap-4 ${className}`}>

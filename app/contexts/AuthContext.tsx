@@ -64,7 +64,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
               createdAt: userData.createdAt?.toDate() || new Date(),
             });
           } else {
-            // Створюємо новий документ користувача
             const newUser: AppUser = {
               uid: user.uid,
               email: user.email || '',
@@ -82,7 +81,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           console.error('Error loading user data:', error);
         }
       } else {
-        // Видаляємо токен з cookies при logout
         document.cookie =
           'firebase-auth-token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; samesite=lax';
         setAppUser(null);
@@ -152,12 +150,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       console.log('Logging out...');
       await signOut(auth);
       console.log('SignOut completed');
-      
-      // Видаляємо токен з cookies перед перенаправленням
+
       document.cookie =
         'firebase-auth-token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; samesite=lax';
       console.log('Cookie cleared');
-      
+
       // Перенаправляємо на сторінку входу після logout
       window.location.href = '/auth/signin';
       console.log('Redirecting to signin');

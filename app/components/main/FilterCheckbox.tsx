@@ -5,11 +5,11 @@ interface FilterCheckboxProps {
   className?: string;
 }
 
-export default function FilterCheckbox({ 
-  label, 
-  checked, 
-  onChange, 
-  className = '' 
+export default function FilterCheckbox({
+  label,
+  checked,
+  onChange,
+  className = '',
 }: FilterCheckboxProps) {
   return (
     <label className={`flex items-center gap-1.5 cursor-pointer ${className}`}>
@@ -17,12 +17,14 @@ export default function FilterCheckbox({
         <input
           type="checkbox"
           checked={checked}
-          onChange={(e) => onChange(e.target.checked)}
+          onChange={e => onChange(e.target.checked)}
           className="sr-only"
         />
-        <div className={`w-6 h-6 border-2 border-[#E6D8D6] rounded ${
-          checked ? 'bg-[#FFE478] border-[#FFE478]' : 'bg-transparent'
-        } flex items-center justify-center`}>
+        <div
+          className={`w-6 h-6 border-2 border-[#E6D8D6] rounded ${
+            checked ? 'bg-[#FFE478] border-[#FFE478]' : 'bg-transparent'
+          } flex items-center justify-center`}
+        >
           {checked && (
             <svg
               width="16"

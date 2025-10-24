@@ -13,7 +13,10 @@ export default function UserProfile({ className = '' }: UserProfileProps) {
   // Закриваємо dropdown при кліку поза ним
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
         setShowDropdown(false);
       }
     };

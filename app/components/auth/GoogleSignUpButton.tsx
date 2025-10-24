@@ -6,10 +6,10 @@ interface GoogleSignUpButtonProps {
   className?: string;
 }
 
-export default function GoogleSignUpButton({ 
-  onClick, 
-  loading = false, 
-  className = '' 
+export default function GoogleSignUpButton({
+  onClick,
+  loading = false,
+  className = '',
 }: GoogleSignUpButtonProps) {
   return (
     <Button

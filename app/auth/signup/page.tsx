@@ -79,7 +79,7 @@ export default function SignUpPage() {
 
           {/* Welcome Section */}
           <div className="space-y-6">
-            <WelcomeSection 
+            <WelcomeSection
               title="Get Started"
               subtitle="Welcome! We're thrilled to have you."
             />
@@ -91,7 +91,10 @@ export default function SignUpPage() {
             <Divider />
 
             {/* Google Sign Up Button */}
-            <GoogleSignUpButton onClick={handleGoogleSignUp} loading={loading} />
+            <GoogleSignUpButton
+              onClick={handleGoogleSignUp}
+              loading={loading}
+            />
 
             {/* Sign In Link */}
             <SignInLink />

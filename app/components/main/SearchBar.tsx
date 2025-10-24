@@ -1,25 +1,43 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 interface SearchBarProps {
   onSearch: (query: string) => void;
   placeholder?: string;
+  initialValue?: string;
   className?: string;
 }
 
-export default function SearchBar({ 
-  onSearch, 
-  placeholder = "Search...", 
-  className = '' 
+export default function SearchBar({
+  onSearch,
+  placeholder = 'Search...',
+  initialValue = '',
+  className = '',
 }: SearchBarProps) {
-  const [query, setQuery] = useState('');
+  const [query, setQuery] = useState(initialValue);
+
+  // Оновлюємо query коли змінюється initialValue
+  useEffect(() => {
+    setQuery(initialValue);
+  }, [initialValue]);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newQuery = e.target.value;
+    setQuery(newQuery);
+    // Викликаємо onSearch одразу при зміні
+    onSearch(newQuery);
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    // Форма все ще може бути надіслана через Enter
     onSearch(query);
   };
 
   return (
-    <form onSubmit={handleSubmit} className={`flex-1 max-w-[400px] ${className}`}>
+    <form
+      onSubmit={handleSubmit}
+      className={`flex-1 max-w-[400px] ${className}`}
+    >
       <div className="relative">
         <div className="flex items-center px-3 py-3 bg-white/16 border border-[rgba(230,221,214,0.2)] rounded-xl">
           <div className="flex items-center gap-1.5 flex-1">
@@ -42,7 +60,7 @@ export default function SearchBar({
             <input
               type="text"
               value={query}
-              onChange={(e) => setQuery(e.target.value)}
+              onChange={handleChange}
               placeholder={placeholder}
               className="flex-1 bg-transparent text-white placeholder-[rgba(235,220,209,0.4)] font-['Fira_Sans'] text-base focus:outline-none"
             />

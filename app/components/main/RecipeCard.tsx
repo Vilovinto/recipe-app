@@ -10,12 +10,25 @@ interface RecipeCardProps {
   className?: string;
 }
 
-export default function RecipeCard({ 
-  recipe, 
-  onEdit, 
-  onDelete, 
+// Функція для форматування часу приготування
+const formatPrepTime = (minutes: number): string => {
+  if (minutes < 60) {
+    return `${minutes} m`;
+  }
+  const hours = Math.floor(minutes / 60);
+  const remainingMinutes = minutes % 60;
+  if (remainingMinutes === 0) {
+    return `${hours} h`;
+  }
+  return `${hours} h ${remainingMinutes} m`;
+};
+
+export default function RecipeCard({
+  recipe,
+  onEdit,
+  onDelete,
   isOwner = false,
-  className = '' 
+  className = '',
 }: RecipeCardProps) {
   const router = useRouter();
   const [showMenu, setShowMenu] = useState(false);
@@ -57,7 +70,10 @@ export default function RecipeCard({
   // Закриваємо action menu при кліку поза ним
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (actionMenuRef.current && !actionMenuRef.current.contains(event.target as Node)) {
+      if (
+        actionMenuRef.current &&
+        !actionMenuRef.current.contains(event.target as Node)
+      ) {
         setShowActionMenu(false);
       }
     };
@@ -69,7 +85,9 @@ export default function RecipeCard({
   }, []);
 
   return (
-    <div className={`relative w-[330.67px] h-[328px] bg-[rgba(255,255,255,0.16)] border-[1.5px] border-[rgba(230,216,214,0.2)] rounded-lg overflow-visible group cursor-pointer ${className}`}>
+    <div
+      className={`relative w-[330.67px] h-[328px] bg-[rgba(255,255,255,0.16)] border-[1.5px] border-[rgba(230,216,214,0.2)] rounded-lg overflow-visible group cursor-pointer ${className}`}
+    >
       <div onClick={handleCardClick} className="block h-full">
         {/* Recipe Image */}
         <div className="w-full h-[164px] relative">
@@ -131,20 +149,14 @@ export default function RecipeCard({
             </div>
           </div>
 
-          {/* Prep Time Buttons and Action Menu */}
+          {/* Prep Time and Action Menu */}
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <button className="px-4 py-1.5 bg-[#FFE478] text-[#0D0402] rounded-lg font-semibold text-[15px] leading-5 font-['Fira_Sans']">
-                1 hr
-              </button>
-              <button className="px-4 py-1.5 bg-[#FFE478] text-[#0D0402] rounded-lg font-semibold text-[15px] leading-5 font-['Fira_Sans']">
-                1.5 hrs
-              </button>
-              <button className="px-4 py-1.5 bg-[#FFE478] text-[#0D0402] rounded-lg font-semibold text-[15px] leading-5 font-['Fira_Sans']">
-                2 hrs
-              </button>
+              <div className="px-4 py-1.5 bg-[#FFE478] text-[#0D0402] rounded-lg font-semibold text-[15px] leading-5 font-['Fira_Sans']">
+                {formatPrepTime(recipe.prepTime)}
+              </div>
             </div>
-            
+
             {/* Three Dots Button */}
             <div className="relative z-10" ref={actionMenuRef}>
               <button
@@ -162,8 +174,8 @@ export default function RecipeCard({
 
               {/* Action Menu */}
               {showActionMenu && (
-                          <div className="absolute right-0 top-full mt-1 w-[102px] h-[64px] bg-[#FFE478] rounded-lg shadow-lg z-99999 flex flex-col items-start p-1 gap-2">
-                  <button 
+                <div className="absolute right-0 top-full mt-1 w-[102px] h-[64px] bg-[#FFE478] rounded-lg shadow-lg z-99999 flex flex-col items-start p-1 gap-2">
+                  <button
                     onClick={handleEdit}
                     className="flex flex-row justify-center items-center px-1 py-0.5 gap-2.5 w-[94px] h-6 bg-linear-to-b from-white/30 to-white/30 rounded hover:bg-white/40 transition-colors"
                   >
@@ -171,7 +183,7 @@ export default function RecipeCard({
                       Edit
                     </span>
                   </button>
-                  <button 
+                  <button
                     onClick={handleDelete}
                     className="flex flex-row justify-center items-center px-1 py-0.5 gap-2.5 w-[94px] h-6 rounded hover:bg-white/20 transition-colors"
                   >

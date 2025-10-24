@@ -69,7 +69,10 @@ export default function SignInPage() {
             <Divider />
 
             {/* Google Sign In Button */}
-            <GoogleSignInButton onClick={handleGoogleSignIn} loading={loading} />
+            <GoogleSignInButton
+              onClick={handleGoogleSignIn}
+              loading={loading}
+            />
 
             {/* Sign Up Link */}
             <SignUpLink />

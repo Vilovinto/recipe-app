@@ -7,23 +7,32 @@ interface ConditionalLayoutProps {
   children: React.ReactNode;
 }
 
-export default function ConditionalLayout({ children }: ConditionalLayoutProps) {
+export default function ConditionalLayout({
+  children,
+}: ConditionalLayoutProps) {
   const pathname = usePathname();
-  
+
   // Сторінки, які не повинні мати Layout
-  const noLayoutPages = ['/auth/signin', '/auth/signup', '/auth/forgot-password', '/recipes'];
-  
+  const noLayoutPages = [
+    '/auth/signin',
+    '/auth/signup',
+    '/auth/forgot-password',
+    '/recipes',
+  ];
+
   // Перевіряємо чи це динамічний маршрут /recipes/[id]
-  const isRecipeDetailPage = pathname.startsWith('/recipes/') && pathname !== '/recipes';
-  
+  const isRecipeDetailPage =
+    pathname.startsWith('/recipes/') && pathname !== '/recipes';
+
   // Перевіряємо чи поточний шлях не повинен мати Layout
-  const shouldHideLayout = noLayoutPages.includes(pathname) || isRecipeDetailPage;
-  
+  const shouldHideLayout =
+    noLayoutPages.includes(pathname) || isRecipeDetailPage;
+
   // Якщо це сторінка без Layout - показуємо тільки children
   if (shouldHideLayout) {
     return <>{children}</>;
   }
-  
+
   // Для всіх інших сторінок показуємо Layout
   return <Layout>{children}</Layout>;
 }

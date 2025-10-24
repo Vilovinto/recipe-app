@@ -9,10 +9,10 @@ interface LoginFormProps {
   className?: string;
 }
 
-export default function LoginForm({ 
-  onSubmit, 
-  loading = false, 
-  className = '' 
+export default function LoginForm({
+  onSubmit,
+  loading = false,
+  className = '',
 }: LoginFormProps) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');

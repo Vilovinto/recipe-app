@@ -9,12 +9,12 @@ interface RecipeGridProps {
   className?: string;
 }
 
-export default function RecipeGrid({ 
-  recipes, 
-  onEdit, 
-  onDelete, 
+export default function RecipeGrid({
+  recipes,
+  onEdit,
+  onDelete,
   currentUserId,
-  className = '' 
+  className = '',
 }: RecipeGridProps) {
   if (recipes.length === 0) {
     return (
@@ -44,19 +44,21 @@ export default function RecipeGrid({
 
   return (
     <div className={`flex flex-col gap-8 ${className}`}>
-      {Array.from({ length: Math.ceil(recipes.length / 3) }).map((_, rowIndex) => (
-        <div key={rowIndex} className="flex flex-row items-start gap-8">
-          {recipes.slice(rowIndex * 3, (rowIndex + 1) * 3).map((recipe) => (
-            <RecipeCard
-              key={recipe.id}
-              recipe={recipe}
-              onEdit={onEdit}
-              onDelete={onDelete}
-              isOwner={currentUserId === recipe.userId}
-            />
-          ))}
-        </div>
-      ))}
+      {Array.from({ length: Math.ceil(recipes.length / 3) }).map(
+        (_, rowIndex) => (
+          <div key={rowIndex} className="flex flex-row items-start gap-8">
+            {recipes.slice(rowIndex * 3, (rowIndex + 1) * 3).map(recipe => (
+              <RecipeCard
+                key={recipe.id}
+                recipe={recipe}
+                onEdit={onEdit}
+                onDelete={onDelete}
+                isOwner={currentUserId === recipe.userId}
+              />
+            ))}
+          </div>
+        )
+      )}
     </div>
   );
 }
