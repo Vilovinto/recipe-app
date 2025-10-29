@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import Link from 'next/link';
+import toast from 'react-hot-toast';
 import InputField from './InputField';
 import Button from './Button';
 
@@ -44,12 +44,13 @@ export default function LoginForm({
           showPasswordToggle
         />
         <div className="text-right">
-          <Link
-            href="/auth/forgot-password"
-            className="text-lg text-[#FFE478] hover:text-[#FFE478]/80 transition-colors font-['Fira_Sans']"
+          <button
+            type="button"
+            onClick={() => toast.error('Password recovery is not available yet')}
+            className="text-lg text-[#FFE478] hover:text-[#FFE478]/80 transition-colors font-['Fira_Sans'] cursor-pointer"
           >
             Forgot password ?
-          </Link>
+          </button>
         </div>
       </div>
 

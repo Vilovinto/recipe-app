@@ -47,11 +47,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setUser(user);
 
       if (user) {
-        // Зберігаємо токен в cookies для middleware
         const token = await user.getIdToken();
         document.cookie = `firebase-auth-token=${token}; path=/; max-age=3600; samesite=lax`;
 
-        // Завантажуємо додаткові дані користувача з Firestore
         try {
           const userDoc = await getDoc(doc(db, 'users', user.uid));
           if (userDoc.exists()) {
@@ -108,7 +106,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       password
     );
 
-    // Створюємо документ користувача в Firestore
     const newUser: AppUser = {
       uid: user.uid,
       email: user.email || '',
@@ -127,10 +124,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const provider = new GoogleAuthProvider();
     const { user } = await signInWithPopup(auth, provider);
 
-    // Перевіряємо чи існує документ користувача
     const userDoc = await getDoc(doc(db, 'users', user.uid));
     if (!userDoc.exists()) {
-      // Створюємо новий документ користувача
       const newUser: AppUser = {
         uid: user.uid,
         email: user.email || '',
@@ -155,7 +150,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         'firebase-auth-token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; samesite=lax';
       console.log('Cookie cleared');
 
-      // Перенаправляємо на сторінку входу після logout
       window.location.href = '/auth/signin';
       console.log('Redirecting to signin');
     } catch (error) {

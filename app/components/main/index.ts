@@ -1,4 +1,3 @@
-// Main page components exports
 export { default as Header } from './Header';
 export { default as SearchBar } from './SearchBar';
 export { default as UserProfile } from './UserProfile';
@@ -11,3 +10,11 @@ export { default as RecipeGrid } from './RecipeGrid';
 export { default as Pagination } from './Pagination';
 export { default as NewRecipeModal } from './NewRecipeModal';
 export { default as EditRecipeModal } from './EditRecipeModal';
+export { default as CustomSelect } from './CustomSelect';
+export { default as Modal } from './Modal';
+export { default as RecipeFormFields } from './RecipeFormFields';
+export { default as RecipeImageUpload } from './RecipeImageUpload';
+export { default as IngredientsList } from './IngredientsList';
+export { default as InstructionsList } from './InstructionsList';
+export { default as ActionMenu } from './ActionMenu';
+export { default as RecipeFiltersBar } from './RecipeFiltersBar';

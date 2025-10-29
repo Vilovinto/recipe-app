@@ -5,6 +5,7 @@ interface SearchBarProps {
   placeholder?: string;
   initialValue?: string;
   className?: string;
+  instant?: boolean; // call onSearch on each keystroke
 }
 
 export default function SearchBar({
@@ -12,10 +13,10 @@ export default function SearchBar({
   placeholder = 'Search...',
   initialValue = '',
   className = '',
+  instant = true,
 }: SearchBarProps) {
   const [query, setQuery] = useState(initialValue);
 
-  // Оновлюємо query коли змінюється initialValue
   useEffect(() => {
     setQuery(initialValue);
   }, [initialValue]);
@@ -23,13 +24,13 @@ export default function SearchBar({
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newQuery = e.target.value;
     setQuery(newQuery);
-    // Викликаємо onSearch одразу при зміні
-    onSearch(newQuery);
+    if (instant) {
+      onSearch(newQuery);
+    }
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Форма все ще може бути надіслана через Enter
     onSearch(query);
   };
 

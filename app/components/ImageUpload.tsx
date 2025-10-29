@@ -19,7 +19,6 @@ export default function ImageUpload({
 
   const handleFileSelect = (file: File) => {
     if (file && file.type.startsWith('image/')) {
-      // Перевірка розміру файлу (максимум 10MB)
       if (file.size > 10 * 1024 * 1024) {
         alert('File size must be less than 10MB');
         return;
@@ -27,7 +26,6 @@ export default function ImageUpload({
 
       onImageSelect(file);
 
-      // Створення попереднього перегляду
       const reader = new FileReader();
       reader.onload = e => {
         setPreview(e.target?.result as string);

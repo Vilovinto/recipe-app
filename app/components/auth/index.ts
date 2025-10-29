@@ -1,5 +1,3 @@
-// Auth components exports
-export { default as Logo } from './Logo';
 export { default as WelcomeSection } from './WelcomeSection';
 export { default as InputField } from './InputField';
 export { default as Button } from './Button';

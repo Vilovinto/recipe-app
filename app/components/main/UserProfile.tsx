@@ -10,7 +10,6 @@ export default function UserProfile({ className = '' }: UserProfileProps) {
   const [showDropdown, setShowDropdown] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // Закриваємо dropdown при кліку поза ним
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -35,7 +34,6 @@ export default function UserProfile({ className = '' }: UserProfileProps) {
 
   return (
     <div className={`flex items-center gap-6 ${className}`}>
-      {/* Bell Icon */}
       <button className="w-6 h-6 hover:opacity-80 transition-opacity">
         <svg
           width="24"
@@ -62,16 +60,17 @@ export default function UserProfile({ className = '' }: UserProfileProps) {
         </svg>
       </button>
 
-      {/* User Profile */}
       <div className="relative" ref={dropdownRef}>
         <button
           onClick={() => setShowDropdown(!showDropdown)}
           className="flex items-center gap-4 px-4 py-1 bg-white/10 border border-[rgba(230,216,214,0.2)] rounded-xl hover:bg-white/20 transition-colors"
         >
-          <div className="w-9 h-9 bg-linear-to-br from-blue-400 to-purple-500 rounded-full flex items-center justify-center">
-            <span className="text-white font-semibold text-sm">
-              {appUser?.firstName?.charAt(0) || 'U'}
-            </span>
+          <div className="w-9 h-9 rounded-full overflow-hidden flex items-center justify-center">
+            <img
+              src="https://firebasestorage.googleapis.com/v0/b/recipe-app-caa91.firebasestorage.app/o/recipe-images%2FjfU84aSjTTX2qZlIyJpYyCM753K2%2Fb45fff6b8e9ca09258e544c7bd3e6cd00180d427.png?alt=media&token=fdc18eed-8f34-4278-b3dd-cb4ddcedc1ca"
+              alt={`${appUser?.firstName} ${appUser?.lastName}`}
+              className="w-full h-full object-cover"
+            />
           </div>
           <div className="flex flex-col items-start">
             <span className="text-[#E6D8D6] font-semibold text-base font-['Fira_Sans']">

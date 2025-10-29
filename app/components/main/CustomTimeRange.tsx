@@ -18,9 +18,14 @@ export default function CustomTimeRange({
       <input
         type="text"
         value={minTime}
-        onChange={e => onMinTimeChange(e.target.value)}
-        placeholder="Min"
-        className="flex-1 px-1.5 py-1 bg-white/16 border border-[rgba(230,216,214,0.2)] rounded-lg text-[rgba(230,216,214,0.4)] text-[13px] leading-4 font-['Fira_Sans'] focus:outline-none focus:border-[#FFE478]"
+        onChange={e => {
+          const value = e.target.value;
+          if (value === '' || /^\d*\.?\d*$/.test(value)) {
+            onMinTimeChange(value);
+          }
+        }}
+        placeholder="0.0"
+        className="w-20 px-1.5 py-1 bg-white/16 border border-[rgba(230,216,214,0.2)] rounded-lg text-[rgba(230,216,214,0.4)] text-[13px] leading-4 font-['Fira_Sans'] focus:outline-none focus:border-[#FFE478]"
       />
       <span className="text-[#E6D8D6] text-[15px] leading-5 font-['Fira_Sans']">
         to
@@ -28,9 +33,14 @@ export default function CustomTimeRange({
       <input
         type="text"
         value={maxTime}
-        onChange={e => onMaxTimeChange(e.target.value)}
-        placeholder="Max"
-        className="flex-1 px-1.5 py-1 bg-white/16 border border-[rgba(230,216,214,0.2)] rounded-lg text-[rgba(230,216,214,0.4)] text-[13px] leading-4 font-['Fira_Sans'] focus:outline-none focus:border-[#FFE478]"
+        onChange={e => {
+          const value = e.target.value;
+          if (value === '' || /^\d*\.?\d*$/.test(value)) {
+            onMaxTimeChange(value);
+          }
+        }}
+        placeholder="0.0"
+        className="w-20 px-1.5 py-1 bg-white/16 border border-[rgba(230,216,214,0.2)] rounded-lg text-[rgba(230,216,214,0.4)] text-[13px] leading-4 font-['Fira_Sans'] focus:outline-none focus:border-[#FFE478]"
       />
     </div>
   );

@@ -1,4 +1,3 @@
-// User types
 export interface User {
   uid: string;
   email: string;
@@ -7,18 +6,19 @@ export interface User {
   createdAt: Date;
 }
 
-// Recipe types
 export interface Recipe {
   id: string;
   title: string;
   description: string;
+  introduction?: string;
   category: RecipeCategory;
   cuisine: string;
-  prepTime: number; // in minutes
+  difficulty?: string;
+  prepTime: number;
   rating: number;
   ingredients: string[];
   instructions: string[];
-  image: string; // Firebase Storage URL
+  image: string;
   author: string;
   userId: string;
   createdAt: Date;
@@ -32,23 +32,23 @@ export type RecipeCategory =
   | 'breakfast'
   | 'vegan';
 
-// Filter types
 export interface RecipeFilters {
   search?: string;
   category?: RecipeCategory;
   prepTime?: PrepTimeFilter;
+  cuisine?: string;
+  difficulty?: string;
+  customPrepTime?: { min?: number; max?: number };
 }
 
 export type PrepTimeFilter = '<15' | '<30' | '<60' | '>60';
 
-// Auth types
 export interface AuthUser {
   uid: string;
   email: string | null;
   displayName: string | null;
 }
 
-// Form types
 export interface SignInForm {
   email: string;
   password: string;
@@ -66,6 +66,7 @@ export interface SignUpForm {
 export interface RecipeForm {
   title: string;
   description: string;
+  introduction?: string;
   category: RecipeCategory;
   cuisine: string;
   prepTime: number;

@@ -4,9 +4,6 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '../../contexts/AuthContext';
 import toast from 'react-hot-toast';
-
-// Import components
-import Logo from '../../components/auth/Logo';
 import WelcomeSection from '../../components/auth/WelcomeSection';
 import SignUpForm from '../../components/auth/SignUpForm';
 import Divider from '../../components/auth/Divider';
@@ -28,7 +25,6 @@ export default function SignUpPage() {
   }) => {
     const { firstName, lastName, email, password, confirmPassword } = data;
 
-    // Validation
     if (!firstName || !lastName || !email || !password || !confirmPassword) {
       toast.error('Please fill in all fields');
       return;
@@ -71,41 +67,35 @@ export default function SignUpPage() {
 
   return (
     <div className="min-h-screen bg-[#2D2726] flex">
-      {/* Left Side - Sign Up Form */}
       <div className="flex-1 flex items-center justify-center px-4 sm:px-6 lg:px-8">
         <div className="max-w-md w-full space-y-8">
-          {/* Logo */}
-          <Logo />
+          <div className="w-full">
+            <img
+              src="https://firebasestorage.googleapis.com/v0/b/recipe-app-caa91.firebasestorage.app/o/recipe-images%2FjfU84aSjTTX2qZlIyJpYyCM753K2%2FFrame.png?alt=media&token=75972c34-1be9-45c2-926a-abfa9b087f6f"
+              alt="RecipeFinder"
+              className="w-[220px] h-auto"
+            />
+          </div>
 
-          {/* Welcome Section */}
           <div className="space-y-6">
             <WelcomeSection
               title="Get Started"
               subtitle="Welcome! We're thrilled to have you."
             />
-
-            {/* Sign Up Form */}
             <SignUpForm onSubmit={handleSignUp} loading={loading} />
-
-            {/* Divider */}
             <Divider />
-
-            {/* Google Sign Up Button */}
             <GoogleSignUpButton
               onClick={handleGoogleSignUp}
               loading={loading}
             />
-
-            {/* Sign In Link */}
             <SignInLink />
           </div>
         </div>
       </div>
 
-      {/* Right Side - Image */}
       <div className="hidden lg:flex lg:flex-1 lg:items-center lg:justify-center p-8">
         <div className="w-full max-w-[675px] h-[900px]">
-          <RecipeImage />
+          <RecipeImage src="https://firebasestorage.googleapis.com/v0/b/recipe-app-caa91.firebasestorage.app/o/recipe-images%2FjfU84aSjTTX2qZlIyJpYyCM753K2%2F93972fa1807371d859c8ff53772a54afa46a9168.png?alt=media&token=33a2ef37-1786-4336-95de-1939a7f4c4b4" alt="Recipe collage" />
         </div>
       </div>
     </div>

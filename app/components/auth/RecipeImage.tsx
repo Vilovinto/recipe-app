@@ -17,7 +17,6 @@ export default function RecipeImage({
     );
   }
 
-  // Placeholder when no image is provided
   return (
     <div className={`w-full h-full rounded-3xl overflow-hidden ${className}`}>
       <div className="w-full h-full bg-linear-to-br from-orange-200 to-orange-300 flex items-center justify-center">
