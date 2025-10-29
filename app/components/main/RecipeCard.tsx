@@ -1,4 +1,5 @@
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 import { Recipe } from '../../types';
 import { formatPrepTime } from '../../lib/recipe-utils';
 import ActionMenu from './ActionMenu';
@@ -33,10 +34,13 @@ export default function RecipeCard({
       <div onClick={handleCardClick} className="block h-full">
         <div className="w-full h-[164px] relative">
           {recipe.image ? (
-            <img
+            <Image
               src={recipe.image}
               alt={recipe.title}
-              className="w-full h-full object-cover"
+              fill
+              className="object-cover"
+              loading="lazy"
+              sizes="(max-width: 768px) 100vw, 330px"
             />
           ) : (
             <div className="w-full h-full bg-linear-to-br from-gray-300 to-gray-400 flex items-center justify-center">

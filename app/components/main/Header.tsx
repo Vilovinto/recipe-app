@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 import SearchBar from './SearchBar';
 import UserProfile from './UserProfile';
 import NewRecipeModal from './NewRecipeModal';
@@ -51,9 +52,12 @@ export default function Header({
               className="w-[180px] h-auto shrink-0 hover:opacity-90 transition-opacity"
               aria-label="Go to recipes"
             >
-              <img
+              <Image
                 src="https://firebasestorage.googleapis.com/v0/b/recipe-app-caa91.firebasestorage.app/o/recipe-images%2FjfU84aSjTTX2qZlIyJpYyCM753K2%2FFrame.png?alt=media&token=75972c34-1be9-45c2-926a-abfa9b087f6f"
                 alt="RecipeFinder"
+                width={180}
+                height={60}
+                priority
                 className="w-[180px] h-auto"
               />
             </button>

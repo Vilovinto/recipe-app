@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 import { useAuth } from '../../contexts/AuthContext';
 import toast from 'react-hot-toast';
 import WelcomeSection from '../../components/auth/WelcomeSection';
@@ -52,9 +53,12 @@ export default function SignInPage() {
       <div className="flex-1 flex items-center justify-center px-4 sm:px-6 lg:px-8">
         <div className="max-w-md w-full space-y-10">
           <div className="w-full">
-            <img
+            <Image
               src="https://firebasestorage.googleapis.com/v0/b/recipe-app-caa91.firebasestorage.app/o/recipe-images%2FjfU84aSjTTX2qZlIyJpYyCM753K2%2FFrame.png?alt=media&token=75972c34-1be9-45c2-926a-abfa9b087f6f"
               alt="RecipeFinder"
+              width={220}
+              height={60}
+              priority
               className="w-[220px] h-auto"
             />
           </div>

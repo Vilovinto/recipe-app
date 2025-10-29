@@ -1,3 +1,5 @@
+import Image from 'next/image';
+
 interface RecipeImageProps {
   src?: string;
   alt?: string;
@@ -11,8 +13,15 @@ export default function RecipeImage({
 }: RecipeImageProps) {
   if (src) {
     return (
-      <div className={`w-full h-full rounded-3xl overflow-hidden ${className}`}>
-        <img src={src} alt={alt} className="w-full h-full object-cover" />
+      <div className={`w-full h-full rounded-3xl overflow-hidden relative ${className}`}>
+        <Image
+          src={src}
+          alt={alt}
+          fill
+          className="object-cover"
+          loading="lazy"
+          sizes="(max-width: 1024px) 100vw, 675px"
+        />
       </div>
     );
   }

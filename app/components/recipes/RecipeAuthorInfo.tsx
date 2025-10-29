@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import { Recipe } from '../../types';
 
 interface RecipeAuthorInfoProps {
@@ -17,11 +18,14 @@ export default function RecipeAuthorInfo({ recipe }: RecipeAuthorInfoProps) {
 
       <div className="flex flex-row items-center gap-3 w-full">
         <div className="w-9 h-9 relative">
-          <div className="w-9 h-9 rounded-full overflow-hidden flex items-center justify-center">
-            <img
+          <div className="w-9 h-9 rounded-full overflow-hidden flex items-center justify-center relative">
+            <Image
               src="https://firebasestorage.googleapis.com/v0/b/recipe-app-caa91.firebasestorage.app/o/recipe-images%2FjfU84aSjTTX2qZlIyJpYyCM753K2%2Fb45fff6b8e9ca09258e544c7bd3e6cd00180d427.png?alt=media&token=fdc18eed-8f34-4278-b3dd-cb4ddcedc1ca"
               alt={recipe.author || 'Recipe Creator'}
-              className="w-full h-full object-cover"
+              fill
+              className="object-cover"
+              loading="lazy"
+              sizes="36px"
             />
           </div>
         </div>

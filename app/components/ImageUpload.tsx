@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useRef } from 'react';
+import Image from 'next/image';
 
 interface ImageUploadProps {
   onImageSelect: (file: File) => void;
@@ -93,11 +94,15 @@ export default function ImageUpload({
       >
         {getImageSrc() ? (
           <div className="space-y-4">
-            <img
-              src={getImageSrc()!}
-              alt="Recipe preview"
-              className="mx-auto h-32 w-32 object-cover rounded-lg"
-            />
+            <div className="mx-auto h-32 w-32 relative">
+              <Image
+                src={getImageSrc()!}
+                alt="Recipe preview"
+                fill
+                className="object-cover rounded-lg"
+                unoptimized
+              />
+            </div>
             <div>
               <p className="text-sm font-medium text-gray-900">
                 Image selected

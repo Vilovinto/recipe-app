@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import Image from 'next/image';
 import { useAuth } from '../../contexts/AuthContext';
 
 interface UserProfileProps {
@@ -65,11 +66,14 @@ export default function UserProfile({ className = '' }: UserProfileProps) {
           onClick={() => setShowDropdown(!showDropdown)}
           className="flex items-center gap-4 px-4 py-1 bg-white/10 border border-[rgba(230,216,214,0.2)] rounded-xl hover:bg-white/20 transition-colors"
         >
-          <div className="w-9 h-9 rounded-full overflow-hidden flex items-center justify-center">
-            <img
+          <div className="w-9 h-9 rounded-full overflow-hidden flex items-center justify-center relative">
+            <Image
               src="https://firebasestorage.googleapis.com/v0/b/recipe-app-caa91.firebasestorage.app/o/recipe-images%2FjfU84aSjTTX2qZlIyJpYyCM753K2%2Fb45fff6b8e9ca09258e544c7bd3e6cd00180d427.png?alt=media&token=fdc18eed-8f34-4278-b3dd-cb4ddcedc1ca"
               alt={`${appUser?.firstName} ${appUser?.lastName}`}
-              className="w-full h-full object-cover"
+              fill
+              className="object-cover"
+              loading="lazy"
+              sizes="36px"
             />
           </div>
           <div className="flex flex-col items-start">

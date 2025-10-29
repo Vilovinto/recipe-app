@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import { Recipe } from '../../types';
 
 interface RecipeImageSectionProps {
@@ -11,10 +12,13 @@ export default function RecipeImageSection({
     <div className="flex flex-col justify-center items-center py-6 gap-1.5 w-full max-w-[1344px] mx-auto">
       <div className="w-full aspect-4/3 relative">
         {recipe.image ? (
-          <img
+          <Image
             src={recipe.image}
             alt={recipe.title}
-            className="w-full h-full object-cover rounded-lg"
+            fill
+            className="object-cover rounded-lg"
+            priority
+            sizes="(max-width: 768px) 100vw, 1344px"
           />
         ) : (
           <div className="w-full h-full bg-linear-to-br from-gray-300 to-gray-400 flex items-center justify-center rounded-lg">

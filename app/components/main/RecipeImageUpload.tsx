@@ -1,3 +1,5 @@
+import Image from 'next/image';
+
 interface RecipeImageUploadProps {
   image: File | null;
   existingImageUrl?: string;
@@ -18,11 +20,14 @@ export default function RecipeImageUpload({
       </h3>
 
       {existingImageUrl && !image && (
-        <div className="mb-4">
-          <img
+        <div className="mb-4 relative w-full h-48">
+          <Image
             src={existingImageUrl}
             alt="Current recipe"
-            className="w-full h-48 object-cover rounded-lg"
+            fill
+            className="object-cover rounded-lg"
+            loading="lazy"
+            sizes="(max-width: 768px) 100vw, 400px"
           />
           <p className="text-sm text-gray-400 mt-2 font-['Fira_Sans']">
             Current image (upload a new one to replace)
