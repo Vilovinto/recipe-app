@@ -13,7 +13,10 @@ export default function RecipeIngredientsList({
 
       <div className="flex flex-col gap-2 w-full">
         {ingredients.map((ingredient, index) => (
-          <div key={index} className="flex flex-row items-center gap-1.5 w-full">
+          <div
+            key={index}
+            className="flex flex-row items-center gap-1.5 w-full"
+          >
             <div className="w-6 h-6 relative">
               <div className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 w-3 h-3 border-[1.5px] border-[#E6D8D6]"></div>
             </div>
@@ -26,4 +29,3 @@ export default function RecipeIngredientsList({
     </div>
   );
 }
-

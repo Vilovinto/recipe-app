@@ -26,7 +26,11 @@ import {
 } from 'firebase/storage';
 import { db, storage } from './firebase';
 import { Recipe, RecipeFilters } from '../types';
-import { convertFirestoreDocToRecipe, applyFiltersToQuery, extractImagePathFromUrl } from './recipe-utils';
+import {
+  convertFirestoreDocToRecipe,
+  applyFiltersToQuery,
+  extractImagePathFromUrl,
+} from './recipe-utils';
 
 const RECIPES_COLLECTION = 'recipes';
 const FAVORITES_COLLECTION = 'favorites';
@@ -66,7 +70,7 @@ export const recipeService = {
       ...filters,
       category: undefined,
     };
-    
+
     let q = query(collection(db, RECIPES_COLLECTION));
 
     if (hasPrepTimeFilter) {
@@ -126,7 +130,7 @@ export const recipeService = {
 
     const searchLower = searchTerm.toLowerCase();
     const searchEnd = searchTerm.toLowerCase() + '\uf8ff';
-    
+
     if (lastDoc) {
       q = query(q, startAfter(lastDoc), endAt(searchEnd), limit(50));
     } else {
@@ -143,7 +147,8 @@ export const recipeService = {
       if (
         recipe.title.toLowerCase().includes(searchLowerTerm) ||
         recipe.description.toLowerCase().includes(searchLowerTerm) ||
-        (recipe.introduction?.toLowerCase().includes(searchLowerTerm) || false) ||
+        recipe.introduction?.toLowerCase().includes(searchLowerTerm) ||
+        false ||
         recipe.cuisine?.toLowerCase().includes(searchLowerTerm)
       ) {
         recipes.push(recipe);
@@ -154,7 +159,9 @@ export const recipeService = {
     let filteredRecipes = recipes;
 
     if (hasCategoryFilter && filters?.category) {
-      filteredRecipes = filteredRecipes.filter(r => r.category === filters.category);
+      filteredRecipes = filteredRecipes.filter(
+        r => r.category === filters.category
+      );
     }
 
     if (hasPrepTimeFilter && filters) {
@@ -173,15 +180,21 @@ export const recipeService = {
 
       if (filters.customPrepTime) {
         if (filters.customPrepTime.min !== undefined) {
-          filteredRecipes = filteredRecipes.filter(r => r.prepTime >= filters.customPrepTime!.min!);
+          filteredRecipes = filteredRecipes.filter(
+            r => r.prepTime >= filters.customPrepTime!.min!
+          );
         }
         if (filters.customPrepTime.max !== undefined) {
-          filteredRecipes = filteredRecipes.filter(r => r.prepTime <= filters.customPrepTime!.max!);
+          filteredRecipes = filteredRecipes.filter(
+            r => r.prepTime <= filters.customPrepTime!.max!
+          );
         }
       }
     }
 
-    filteredRecipes.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+    filteredRecipes.sort(
+      (a, b) => b.createdAt.getTime() - a.createdAt.getTime()
+    );
 
     return { recipes: filteredRecipes.slice(0, 50), lastDoc: newLastDoc };
   },
@@ -216,47 +229,53 @@ export const recipeService = {
     return recipes;
   },
 
-  async getRecipesCount(filters?: RecipeFilters, searchTerm?: string): Promise<number> {
+  async getRecipesCount(
+    filters?: RecipeFilters,
+    searchTerm?: string
+  ): Promise<number> {
     if (searchTerm?.trim()) {
       let q = query(collection(db, RECIPES_COLLECTION));
-      
+
       const filtersWithoutPrepTime: RecipeFilters = {
         ...filters,
         prepTime: undefined,
         customPrepTime: undefined,
       };
-      
+
       q = applyFiltersToQuery(q, filtersWithoutPrepTime);
       if (filters?.category) {
         q = query(q, orderBy('category', 'asc'), orderBy('title', 'asc'));
       } else {
         q = query(q, orderBy('title', 'asc'));
       }
-      
+
       const searchLower = searchTerm.toLowerCase();
       const searchEnd = searchTerm.toLowerCase() + '\uf8ff';
       q = query(q, startAt(searchLower), endAt(searchEnd), limit(1000));
-      
+
       const querySnapshot = await getDocs(q);
       const searchLowerTerm = searchTerm.toLowerCase();
-      
-      const hasPrepTimeFilter = !!(filters?.prepTime || filters?.customPrepTime);
+
+      const hasPrepTimeFilter = !!(
+        filters?.prepTime || filters?.customPrepTime
+      );
       const recipes: Recipe[] = [];
-      
+
       querySnapshot.forEach(doc => {
         const recipe = convertFirestoreDocToRecipe(doc);
         if (
           recipe.title.toLowerCase().includes(searchLowerTerm) ||
           recipe.description.toLowerCase().includes(searchLowerTerm) ||
-          (recipe.introduction?.toLowerCase().includes(searchLowerTerm) || false) ||
+          recipe.introduction?.toLowerCase().includes(searchLowerTerm) ||
+          false ||
           recipe.cuisine?.toLowerCase().includes(searchLowerTerm)
         ) {
           recipes.push(recipe);
         }
       });
-      
+
       let filteredRecipes = recipes;
-      
+
       if (hasPrepTimeFilter && filters) {
         if (filters.prepTime) {
           const timeFilter = filters.prepTime;
@@ -270,33 +289,37 @@ export const recipeService = {
             filteredRecipes = filteredRecipes.filter(r => r.prepTime > 60);
           }
         }
-        
+
         if (filters.customPrepTime) {
           if (filters.customPrepTime.min !== undefined) {
-            filteredRecipes = filteredRecipes.filter(r => r.prepTime >= filters.customPrepTime!.min!);
+            filteredRecipes = filteredRecipes.filter(
+              r => r.prepTime >= filters.customPrepTime!.min!
+            );
           }
           if (filters.customPrepTime.max !== undefined) {
-            filteredRecipes = filteredRecipes.filter(r => r.prepTime <= filters.customPrepTime!.max!);
+            filteredRecipes = filteredRecipes.filter(
+              r => r.prepTime <= filters.customPrepTime!.max!
+            );
           }
         }
       }
-      
+
       return filteredRecipes.length;
     }
-    
+
     const hasCategoryFilter = !!filters?.category;
     const filtersWithoutCategory: RecipeFilters = {
       ...filters,
       category: undefined,
     };
-    
+
     let q = query(collection(db, RECIPES_COLLECTION));
     q = applyFiltersToQuery(q, filtersWithoutCategory);
-    
+
     try {
       const countSnapshot = await getCountFromServer(q);
       let count = countSnapshot.data().count;
-      
+
       if (hasCategoryFilter && filters?.category) {
         const querySnapshot = await getDocs(q);
         const recipes: Recipe[] = [];
@@ -305,7 +328,7 @@ export const recipeService = {
         });
         count = recipes.filter(r => r.category === filters.category).length;
       }
-      
+
       return count;
     } catch (error) {
       console.error('Error getting recipes count:', error);
@@ -314,11 +337,11 @@ export const recipeService = {
       querySnapshot.forEach(doc => {
         recipes.push(convertFirestoreDocToRecipe(doc));
       });
-      
+
       if (hasCategoryFilter && filters?.category) {
         recipes = recipes.filter(r => r.category === filters.category);
       }
-      
+
       return recipes.length;
     }
   },
@@ -332,7 +355,7 @@ export const favoritesService = {
       where('recipeId', '==', recipeId)
     );
     const snapshot = await getDocs(q);
-    
+
     if (snapshot.empty) {
       await addDoc(collection(db, FAVORITES_COLLECTION), {
         userId,
@@ -349,7 +372,7 @@ export const favoritesService = {
       where('recipeId', '==', recipeId)
     );
     const snapshot = await getDocs(q);
-    
+
     await Promise.all(snapshot.docs.map(docSnap => deleteDoc(docSnap.ref)));
   },
 
@@ -387,7 +410,9 @@ export const favoritesService = {
       }
     }
 
-    return recipes.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+    return recipes.sort(
+      (a, b) => b.createdAt.getTime() - a.createdAt.getTime()
+    );
   },
 };
 

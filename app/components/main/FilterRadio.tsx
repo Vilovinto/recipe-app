@@ -14,7 +14,9 @@ export default function FilterRadio({
   className = '',
 }: FilterRadioProps) {
   return (
-    <label className={`flex items-center gap-1.5 ${disabled ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'} ${className}`}>
+    <label
+      className={`flex items-center gap-1.5 ${disabled ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'} ${className}`}
+    >
       <div className="relative">
         <input
           type="radio"

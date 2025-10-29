@@ -25,7 +25,9 @@ function RecipesPageContent() {
   const [searchQuery, setSearchQuery] = useState('');
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [selectedRecipe, setSelectedRecipe] = useState<Recipe | null>(null);
-  const [lastDoc, setLastDoc] = useState<QueryDocumentSnapshot<DocumentData> | undefined>();
+  const [lastDoc, setLastDoc] = useState<
+    QueryDocumentSnapshot<DocumentData> | undefined
+  >();
   const [allCuisines, setAllCuisines] = useState<string[]>([]);
   const [totalRecipesCount, setTotalRecipesCount] = useState<number>(0);
 
@@ -56,7 +58,15 @@ function RecipesPageContent() {
       cuisine: filters.cuisineFilter,
       difficulty: filters.difficultyFilter,
     });
-  }, [filters.selectedCategories, filters.prepTimeFilter, filters.topPrepTimeFilter, filters.customMinTime, filters.customMaxTime, filters.cuisineFilter, filters.difficultyFilter]);
+  }, [
+    filters.selectedCategories,
+    filters.prepTimeFilter,
+    filters.topPrepTimeFilter,
+    filters.customMinTime,
+    filters.customMaxTime,
+    filters.cuisineFilter,
+    filters.difficultyFilter,
+  ]);
 
   useEffect(() => {
     if (!user) return;
@@ -70,33 +80,50 @@ function RecipesPageContent() {
 
         const firestoreFilters = filters.getFirestoreFilters();
         const page = 1;
-        let targetCursor: QueryDocumentSnapshot<DocumentData> | undefined = undefined;
-        let localCursors: Array<QueryDocumentSnapshot<DocumentData> | undefined> = [undefined];
+        let targetCursor: QueryDocumentSnapshot<DocumentData> | undefined =
+          undefined;
+        let localCursors: Array<
+          QueryDocumentSnapshot<DocumentData> | undefined
+        > = [undefined];
 
         const result = searchQuery.trim()
-          ? await recipeService.searchRecipes(searchQuery.trim(), firestoreFilters, targetCursor)
+          ? await recipeService.searchRecipes(
+              searchQuery.trim(),
+              firestoreFilters,
+              targetCursor
+            )
           : await recipeService.getRecipes(firestoreFilters, targetCursor);
 
         localCursors.push(result.lastDoc);
-        const cuisines = Array.from(new Set(result.recipes.map(r => r.cuisine).filter(Boolean) as string[])) as string[];
-        setAllCuisines(prev => Array.from(new Set([...(prev || []), ...cuisines])).sort());
+        const cuisines = Array.from(
+          new Set(
+            result.recipes.map(r => r.cuisine).filter(Boolean) as string[]
+          )
+        ) as string[];
+        setAllCuisines(prev =>
+          Array.from(new Set([...(prev || []), ...cuisines])).sort()
+        );
 
         setRecipes(result.recipes);
         setLastDoc(result.lastDoc);
         pagination.setCursors(localCursors);
 
-        const count = await recipeService.getRecipesCount(firestoreFilters, searchQuery.trim() || undefined);
+        const count = await recipeService.getRecipesCount(
+          firestoreFilters,
+          searchQuery.trim() || undefined
+        );
         setTotalRecipesCount(count);
-        
+
         const calculatedTotalPages = Math.ceil(count / 12);
         pagination.setTotalPages(Math.max(1, calculatedTotalPages));
-        pagination.setHasMore(result.recipes.length === 12 && count > result.recipes.length);
-
+        pagination.setHasMore(
+          result.recipes.length === 12 && count > result.recipes.length
+        );
       } catch (error) {
         console.error('Error loading recipes:', error);
         toast.error('Failed to load recipes');
       } finally {
-    setLoading(false);
+        setLoading(false);
       }
     };
 
@@ -106,40 +133,56 @@ function RecipesPageContent() {
   const handlePageChange = async (page: number) => {
     if (page < 1 || page === pagination.currentPage) return;
     pagination.setCurrentPage(page);
-    
+
     try {
       setLoading(true);
       const firestoreFilters = filters.getFirestoreFilters();
-      let targetCursor: QueryDocumentSnapshot<DocumentData> | undefined = pagination.cursors[page - 1];
+      let targetCursor: QueryDocumentSnapshot<DocumentData> | undefined =
+        pagination.cursors[page - 1];
       let localCursors = [...pagination.cursors];
 
       while (localCursors.length < page) {
         const prevCursor = localCursors[localCursors.length - 1];
         const res = searchQuery.trim()
-          ? await recipeService.searchRecipes(searchQuery.trim(), firestoreFilters, prevCursor)
+          ? await recipeService.searchRecipes(
+              searchQuery.trim(),
+              firestoreFilters,
+              prevCursor
+            )
           : await recipeService.getRecipes(firestoreFilters, prevCursor);
         localCursors.push(res.lastDoc);
-        const cuisines = Array.from(new Set(res.recipes.map(r => r.cuisine).filter(Boolean) as string[])) as string[];
-        setAllCuisines(prev => Array.from(new Set([...(prev || []), ...cuisines])).sort());
+        const cuisines = Array.from(
+          new Set(res.recipes.map(r => r.cuisine).filter(Boolean) as string[])
+        ) as string[];
+        setAllCuisines(prev =>
+          Array.from(new Set([...(prev || []), ...cuisines])).sort()
+        );
         if ((res.recipes?.length || 0) < 12) {
           pagination.setHasMore(false);
           break;
+        }
       }
-    }
 
       targetCursor = localCursors[page - 1];
 
       const result = searchQuery.trim()
-        ? await recipeService.searchRecipes(searchQuery.trim(), firestoreFilters, targetCursor)
+        ? await recipeService.searchRecipes(
+            searchQuery.trim(),
+            firestoreFilters,
+            targetCursor
+          )
         : await recipeService.getRecipes(firestoreFilters, targetCursor);
 
       setRecipes(result.recipes);
       setLastDoc(result.lastDoc);
       pagination.setCursors(localCursors);
 
-      const count = await recipeService.getRecipesCount(firestoreFilters, searchQuery.trim() || undefined);
+      const count = await recipeService.getRecipesCount(
+        firestoreFilters,
+        searchQuery.trim() || undefined
+      );
       setTotalRecipesCount(count);
-      
+
       const calculatedTotalPages = Math.ceil(count / 12);
       pagination.setTotalPages(Math.max(1, calculatedTotalPages));
       pagination.setHasMore(result.recipes.length === 12 && count > page * 12);
@@ -195,8 +238,8 @@ function RecipesPageContent() {
 
     try {
       if (!recipe.id.startsWith('local-')) {
-      try {
-        await recipeService.deleteRecipe(recipe.id);
+        try {
+          await recipeService.deleteRecipe(recipe.id);
         } catch (firebaseError: any) {
           if (firebaseError?.code !== 'not-found') {
             console.error('Error deleting from Firebase:', firebaseError);
@@ -229,9 +272,15 @@ function RecipesPageContent() {
       handleRecipeCreated(recipe);
     };
 
-    window.addEventListener('recipeCreated', handleRecipeCreatedEvent as EventListener);
+    window.addEventListener(
+      'recipeCreated',
+      handleRecipeCreatedEvent as EventListener
+    );
     return () => {
-      window.removeEventListener('recipeCreated', handleRecipeCreatedEvent as EventListener);
+      window.removeEventListener(
+        'recipeCreated',
+        handleRecipeCreatedEvent as EventListener
+      );
     };
   }, []);
 
@@ -268,7 +317,8 @@ function RecipesPageContent() {
                 All Recipes
               </h1>
               <p className="text-[rgba(255,255,255,0.5)] text-sm leading-5 font-['Fira_Sans']">
-                {totalRecipesCount} {totalRecipesCount === 1 ? 'recipe' : 'recipes'}
+                {totalRecipesCount}{' '}
+                {totalRecipesCount === 1 ? 'recipe' : 'recipes'}
               </p>
             </div>
 
@@ -277,15 +327,15 @@ function RecipesPageContent() {
               difficultyFilter={filters.difficultyFilter}
               topPrepTimeFilter={filters.topPrepTimeFilter}
               allCuisines={allCuisines}
-              onCuisineChange={(val) => {
+              onCuisineChange={val => {
                 filters.setCuisineFilter(val);
                 pagination.setCurrentPage(1);
               }}
-              onDifficultyChange={(val) => {
+              onDifficultyChange={val => {
                 filters.setDifficultyFilter(val || '');
                 pagination.setCurrentPage(1);
               }}
-              onPrepTimeChange={(val) => {
+              onPrepTimeChange={val => {
                 filters.setTopPrepTimeFilter(val || '');
                 if (val) {
                   filters.setPrepTimeFilter('');
@@ -309,21 +359,21 @@ function RecipesPageContent() {
             </div>
           ) : (
             <>
-            <RecipeGrid
-              recipes={recipes}
-              onEdit={handleEdit}
-              onDelete={handleDelete}
-              currentUserId={user?.uid}
-            />
+              <RecipeGrid
+                recipes={recipes}
+                onEdit={handleEdit}
+                onDelete={handleDelete}
+                currentUserId={user?.uid}
+              />
 
               {pagination.totalPages > 1 && (
-            <div className="flex justify-start">
-              <Pagination
-                currentPage={pagination.currentPage}
+                <div className="flex justify-start">
+                  <Pagination
+                    currentPage={pagination.currentPage}
                     totalPages={pagination.totalPages}
-                onPageChange={handlePageChange}
-              />
-            </div>
+                    onPageChange={handlePageChange}
+                  />
+                </div>
               )}
             </>
           )}

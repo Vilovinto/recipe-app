@@ -58,13 +58,13 @@ export default function EditRecipeModal({
         prepTime: recipe.prepTime,
         rating: recipe.rating,
         ingredients: recipe.ingredients.length > 0 ? recipe.ingredients : [''],
-        instructions: recipe.instructions.length > 0 ? recipe.instructions : [''],
+        instructions:
+          recipe.instructions.length > 0 ? recipe.instructions : [''],
         image: null,
         existingImageUrl: recipe.image || '',
       });
     }
   }, [isOpen, recipe, user, onClose, updateFormData]);
-
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -123,7 +123,7 @@ export default function EditRecipeModal({
     setLoading(true);
 
     try {
-      let imageUrl = formData.existingImageUrl;
+      let imageUrl = formData.existingImageUrl || recipe.image;
 
       if (formData.image) {
         const imagePath = `recipe-images/${user.uid}/${Date.now()}-${formData.image.name}`;
@@ -150,7 +150,7 @@ export default function EditRecipeModal({
       } catch (firebaseError) {
         console.log('Recipe was only stored locally');
       }
-      
+
       const updatedRecipe: Recipe = {
         ...recipe,
         title: recipeData.title,
@@ -166,7 +166,7 @@ export default function EditRecipeModal({
         author: recipeData.author,
         updatedAt: new Date(),
       };
-      
+
       toast.success('Recipe updated successfully!');
 
       onClose();
@@ -214,7 +214,7 @@ export default function EditRecipeModal({
         <RecipeFormFields
           formData={formData}
           onInputChange={handleInputChange}
-          onCategoryChange={(category) => updateFormData({ category })}
+          onCategoryChange={category => updateFormData({ category })}
         />
         <RecipeImageUpload
           image={formData.image}
@@ -238,4 +238,3 @@ export default function EditRecipeModal({
     </Modal>
   );
 }
-

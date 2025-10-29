@@ -15,7 +15,13 @@ interface HeaderProps {
   instantSearch?: boolean;
 }
 
-export default function Header({ onSearch, onRecipeCreated, searchQuery = '', className = '', instantSearch = true }: HeaderProps) {
+export default function Header({
+  onSearch,
+  onRecipeCreated,
+  searchQuery = '',
+  className = '',
+  instantSearch = true,
+}: HeaderProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const router = useRouter();
 
@@ -51,7 +57,11 @@ export default function Header({ onSearch, onRecipeCreated, searchQuery = '', cl
                 className="w-[180px] h-auto"
               />
             </button>
-            <SearchBar onSearch={onSearch} initialValue={searchQuery} instant={instantSearch} />
+            <SearchBar
+              onSearch={onSearch}
+              initialValue={searchQuery}
+              instant={instantSearch}
+            />
           </div>
 
           <div className="flex items-center gap-6">

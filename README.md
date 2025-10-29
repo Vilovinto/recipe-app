@@ -26,6 +26,7 @@ A simple and convenient recipe management app built with Next.js and Firebase. S
 ## Prerequisites
 
 Required:
+
 - **Node.js 18+** — [nodejs.org](https://nodejs.org/)
 - **npm or yarn** — comes with Node.js
 - **Firebase project** — [Firebase Console](https://console.firebase.google.com/)
@@ -48,6 +49,7 @@ npm install
 ### 3. Set up Firebase
 
 Create a new project in [Firebase Console](https://console.firebase.google.com/) and enable:
+
 - **Authentication** → Email/Password + Google provider
 - **Firestore Database** → Production mode (or test mode for development)
 - **Storage** → Default rules for file uploads
@@ -142,3 +144,4 @@ service firebase.storage {
 - Google Sign-In integration
 - Protected routes using Next.js middleware
 - User data stored in Firestore `users` collection
+```

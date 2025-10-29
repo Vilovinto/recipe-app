@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from 'react';
 
 interface Option {
   label: string;
@@ -21,8 +21,8 @@ export default function CustomSelect({
   value,
   onChange,
   options,
-  placeholder = "Select",
-  className = "",
+  placeholder = 'Select',
+  className = '',
   buttonClassName,
   hidePlaceholderOption = false,
 }: CustomSelectProps) {
@@ -33,12 +33,15 @@ export default function CustomSelect({
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
-      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(event.target as Node)
+      ) {
         setOpen(false);
       }
     }
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
   useEffect(() => {
@@ -58,7 +61,7 @@ export default function CustomSelect({
     return () => cancelAnimationFrame(id);
   }, [open]);
 
-  const selectedLabel = options.find(o => o.value === value)?.label ?? "";
+  const selectedLabel = options.find(o => o.value === value)?.label ?? '';
 
   return (
     <div ref={containerRef} className={`relative ${className}`}>
@@ -72,11 +75,11 @@ export default function CustomSelect({
         aria-haspopup="listbox"
         aria-expanded={open}
       >
-        <span className={value ? "" : "text-[rgba(255,255,255,0.6)]"}>
+        <span className={value ? '' : 'text-[rgba(255,255,255,0.6)]'}>
           {value ? selectedLabel : placeholder}
         </span>
         <svg
-          className={`h-4 w-4 transition-transform ${open ? "rotate-180" : "rotate-0"}`}
+          className={`h-4 w-4 transition-transform ${open ? 'rotate-180' : 'rotate-0'}`}
           viewBox="0 0 20 20"
           fill="currentColor"
           aria-hidden="true"
@@ -101,7 +104,7 @@ export default function CustomSelect({
               aria-selected={!value}
               className="px-4 py-2 cursor-pointer text-[#E6D8D6] hover:bg-[rgba(255,255,255,0.06)] whitespace-nowrap"
               onClick={() => {
-                onChange("");
+                onChange('');
                 setOpen(false);
               }}
             >
@@ -127,5 +130,3 @@ export default function CustomSelect({
     </div>
   );
 }
-
-

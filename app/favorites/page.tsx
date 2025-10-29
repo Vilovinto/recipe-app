@@ -3,7 +3,11 @@
 import { useState, useEffect, Suspense, useCallback, useMemo } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { useSearchParams } from 'next/navigation';
-import { favoritesService, fileService, recipeService } from '../lib/firebase-utils';
+import {
+  favoritesService,
+  fileService,
+  recipeService,
+} from '../lib/firebase-utils';
 import { Recipe } from '../types';
 import { isRecipeOwner, extractImagePathFromUrl } from '../lib/recipe-utils';
 import RecipeGrid from '../components/main/RecipeGrid';
@@ -27,10 +31,12 @@ function FavoritesPageContent() {
 
   const loadFavorites = useCallback(async () => {
     if (!user) return;
-    
+
     try {
       setLoading(true);
-      const favoriteRecipes = await favoritesService.getFavoriteRecipes(user.uid);
+      const favoriteRecipes = await favoritesService.getFavoriteRecipes(
+        user.uid
+      );
       setAllRecipes(favoriteRecipes);
     } catch (error) {
       console.error('Error loading favorites:', error);
@@ -69,7 +75,8 @@ function FavoritesPageContent() {
       return (
         recipe.title.toLowerCase().includes(searchLower) ||
         recipe.description.toLowerCase().includes(searchLower) ||
-        (recipe.introduction?.toLowerCase().includes(searchLower) || false) ||
+        recipe.introduction?.toLowerCase().includes(searchLower) ||
+        false ||
         recipe.cuisine?.toLowerCase().includes(searchLower) ||
         recipe.ingredients.some(ing => ing.toLowerCase().includes(searchLower))
       );
@@ -159,7 +166,8 @@ function FavoritesPageContent() {
                 Favorite Recipes
               </h1>
               <p className="text-[rgba(255,255,255,0.5)] text-sm leading-5 font-['Fira_Sans']">
-                {filteredRecipes.length} {filteredRecipes.length === 1 ? 'recipe' : 'recipes'}
+                {filteredRecipes.length}{' '}
+                {filteredRecipes.length === 1 ? 'recipe' : 'recipes'}
               </p>
             </div>
           </div>
@@ -193,10 +201,14 @@ function FavoritesPageContent() {
                 />
               </svg>
               <p className="text-[rgba(230,216,214,0.7)] text-lg font-['Fira_Sans']">
-                {searchQuery.trim() ? 'No recipes found' : 'No favorite recipes yet'}
+                {searchQuery.trim()
+                  ? 'No recipes found'
+                  : 'No favorite recipes yet'}
               </p>
               <p className="text-[rgba(230,216,214,0.5)] text-sm font-['Fira_Sans'] mt-2">
-                {searchQuery.trim() ? 'Try adjusting your search' : 'Start adding recipes to your favorites!'}
+                {searchQuery.trim()
+                  ? 'Try adjusting your search'
+                  : 'Start adding recipes to your favorites!'}
               </p>
             </div>
           ) : (
@@ -234,4 +246,3 @@ export default function FavoritesPage() {
     </Suspense>
   );
 }
-

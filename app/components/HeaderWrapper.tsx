@@ -36,10 +36,8 @@ export default function HeaderWrapper() {
   };
 
   const handleRecipeCreated = (recipe: Recipe) => {
-    window.dispatchEvent(
-      new CustomEvent('recipeCreated', { detail: recipe })
-    );
-    
+    window.dispatchEvent(new CustomEvent('recipeCreated', { detail: recipe }));
+
     if (pathname !== '/recipes') {
       router.push('/recipes');
     }
@@ -56,4 +54,3 @@ export default function HeaderWrapper() {
     </div>
   );
 }
-

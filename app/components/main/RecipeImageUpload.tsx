@@ -38,7 +38,10 @@ export default function RecipeImageUpload({
           className="hidden"
           id={uploadId}
         />
-        <label htmlFor={uploadId} className="cursor-pointer flex flex-col items-center">
+        <label
+          htmlFor={uploadId}
+          className="cursor-pointer flex flex-col items-center"
+        >
           <svg
             className="w-12 h-12 text-[#E6D8D6] mb-4"
             fill="none"
@@ -53,11 +56,14 @@ export default function RecipeImageUpload({
             />
           </svg>
           <p className="text-white font-['Fira_Sans']">
-            {image ? image.name : existingImageUrl ? 'Click to upload a new image' : 'Click to upload an image'}
+            {image
+              ? image.name
+              : existingImageUrl
+                ? 'Click to upload a new image'
+                : 'Click to upload an image'}
           </p>
         </label>
       </div>
     </div>
   );
 }
-

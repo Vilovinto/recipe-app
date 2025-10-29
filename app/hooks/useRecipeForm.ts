@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import { RecipeCategory } from '../../types';
+import { RecipeCategory } from '../types';
 
 interface RecipeFormState {
   title: string;
@@ -94,13 +94,16 @@ export function useRecipeForm(initialState?: Partial<RecipeFormState>) {
     });
   }, []);
 
-  const handleInstructionChange = useCallback((index: number, value: string) => {
-    setFormData(prev => {
-      const newInstructions = [...prev.instructions];
-      newInstructions[index] = value;
-      return { ...prev, instructions: newInstructions };
-    });
-  }, []);
+  const handleInstructionChange = useCallback(
+    (index: number, value: string) => {
+      setFormData(prev => {
+        const newInstructions = [...prev.instructions];
+        newInstructions[index] = value;
+        return { ...prev, instructions: newInstructions };
+      });
+    },
+    []
+  );
 
   const addInstruction = useCallback(() => {
     setFormData(prev => ({
@@ -145,4 +148,3 @@ export function useRecipeForm(initialState?: Partial<RecipeFormState>) {
     handleImageSelect,
   };
 }
-

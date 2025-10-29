@@ -8,7 +8,9 @@ interface UsePaginationResult {
   hasMore: boolean;
   setCurrentPage: React.Dispatch<React.SetStateAction<number>>;
   setTotalPages: React.Dispatch<React.SetStateAction<number>>;
-  setCursors: React.Dispatch<React.SetStateAction<Array<QueryDocumentSnapshot<DocumentData> | undefined>>>;
+  setCursors: React.Dispatch<
+    React.SetStateAction<Array<QueryDocumentSnapshot<DocumentData> | undefined>>
+  >;
   setHasMore: React.Dispatch<React.SetStateAction<boolean>>;
   resetPagination: () => void;
 }
@@ -16,7 +18,9 @@ interface UsePaginationResult {
 export function usePagination(): UsePaginationResult {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const [cursors, setCursors] = useState<Array<QueryDocumentSnapshot<DocumentData> | undefined>>([undefined]);
+  const [cursors, setCursors] = useState<
+    Array<QueryDocumentSnapshot<DocumentData> | undefined>
+  >([undefined]);
   const [hasMore, setHasMore] = useState(true);
 
   const resetPagination = useCallback(() => {
@@ -37,4 +41,3 @@ export function usePagination(): UsePaginationResult {
     resetPagination,
   };
 }
-

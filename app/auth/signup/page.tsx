@@ -95,7 +95,10 @@ export default function SignUpPage() {
 
       <div className="hidden lg:flex lg:flex-1 lg:items-center lg:justify-center p-8">
         <div className="w-full max-w-[675px] h-[900px]">
-          <RecipeImage src="https://firebasestorage.googleapis.com/v0/b/recipe-app-caa91.firebasestorage.app/o/recipe-images%2FjfU84aSjTTX2qZlIyJpYyCM753K2%2F93972fa1807371d859c8ff53772a54afa46a9168.png?alt=media&token=33a2ef37-1786-4336-95de-1939a7f4c4b4" alt="Recipe collage" />
+          <RecipeImage
+            src="https://firebasestorage.googleapis.com/v0/b/recipe-app-caa91.firebasestorage.app/o/recipe-images%2FjfU84aSjTTX2qZlIyJpYyCM753K2%2F93972fa1807371d859c8ff53772a54afa46a9168.png?alt=media&token=33a2ef37-1786-4336-95de-1939a7f4c4b4"
+            alt="Recipe collage"
+          />
         </div>
       </div>
     </div>

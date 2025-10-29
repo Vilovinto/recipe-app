@@ -75,14 +75,14 @@ export function formatPrepTime(totalMinutes: number): string {
 
 export function parseHoursToMinutes(hoursString: string): number | null {
   if (!hoursString.trim()) return null;
-  
+
   const parsed = parseFloat(hoursString);
   if (isNaN(parsed) || parsed < 0) return null;
-  
+
   const parts = hoursString.split('.');
   let hours = Math.floor(parsed);
   let minutes = 0;
-  
+
   if (parts.length > 1 && parts[1]) {
     const decimalPart = parts[1];
     if (decimalPart.length === 1) {
@@ -91,7 +91,7 @@ export function parseHoursToMinutes(hoursString: string): number | null {
       minutes = parseInt(decimalPart.substring(0, 2));
     }
   }
-  
+
   return hours * 60 + minutes;
 }
 
@@ -119,13 +119,12 @@ export function extractImagePathFromUrl(url: string): string | null {
   if (!url.includes('firebasestorage.googleapis.com')) {
     return null;
   }
-  
+
   const urlParts = url.split('/o/');
   if (urlParts.length > 1) {
     const encodedPath = urlParts[1].split('?')[0];
     return decodeURIComponent(encodedPath);
   }
-  
+
   return null;
 }
-

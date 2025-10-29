@@ -36,7 +36,9 @@ function RecipeDetailContent() {
         }
       }
 
-      const savedRecipes = JSON.parse(localStorage.getItem('userRecipes') || '[]');
+      const savedRecipes = JSON.parse(
+        localStorage.getItem('userRecipes') || '[]'
+      );
       const foundRecipe = savedRecipes.find((r: Recipe) => r.id === params.id);
       if (foundRecipe) {
         foundRecipe.createdAt = new Date(foundRecipe.createdAt);

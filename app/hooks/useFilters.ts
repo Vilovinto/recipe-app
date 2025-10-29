@@ -36,14 +36,16 @@ export function useFilters(): UseFiltersResult {
 
     if (selectedCategories.length > 0) {
       const categoryMap: Record<string, RecipeCategory> = {
-        'Vegan': 'vegan',
-        'Dessert': 'dessert',
-        'Italian': 'main',
-        'Breakfast': 'breakfast',
-        'Mexican': 'main',
-        'Asian': 'main',
+        Vegan: 'vegan',
+        Dessert: 'dessert',
+        Italian: 'main',
+        Breakfast: 'breakfast',
+        Mexican: 'main',
+        Asian: 'main',
       };
-      filters.category = categoryMap[selectedCategories[0]] || (selectedCategories[0].toLowerCase() as RecipeCategory);
+      filters.category =
+        categoryMap[selectedCategories[0]] ||
+        (selectedCategories[0].toLowerCase() as RecipeCategory);
     }
 
     const activePrepTimeFilter = topPrepTimeFilter || prepTimeFilter;
@@ -60,7 +62,10 @@ export function useFilters(): UseFiltersResult {
           min: 30,
           max: 60,
         };
-      } else if (activePrepTimeFilter === 'Over 1 hr' || activePrepTimeFilter === 'Over 1 hour') {
+      } else if (
+        activePrepTimeFilter === 'Over 1 hr' ||
+        activePrepTimeFilter === 'Over 1 hour'
+      ) {
         filters.prepTime = '>60';
       }
     }
@@ -74,8 +79,12 @@ export function useFilters(): UseFiltersResult {
     }
 
     if (activePrepTimeFilter === 'Custom') {
-      const minTimeMinutes = customMinTime ? parseHoursToMinutes(customMinTime) : null;
-      const maxTimeMinutes = customMaxTime ? parseHoursToMinutes(customMaxTime) : null;
+      const minTimeMinutes = customMinTime
+        ? parseHoursToMinutes(customMinTime)
+        : null;
+      const maxTimeMinutes = customMaxTime
+        ? parseHoursToMinutes(customMaxTime)
+        : null;
       filters.customPrepTime = {
         min: minTimeMinutes !== null ? minTimeMinutes : undefined,
         max: maxTimeMinutes !== null ? maxTimeMinutes : undefined,
@@ -83,30 +92,44 @@ export function useFilters(): UseFiltersResult {
     }
 
     return filters;
-  }, [selectedCategories, prepTimeFilter, topPrepTimeFilter, cuisineFilter, difficultyFilter, customMinTime, customMaxTime]);
+  }, [
+    selectedCategories,
+    prepTimeFilter,
+    topPrepTimeFilter,
+    cuisineFilter,
+    difficultyFilter,
+    customMinTime,
+    customMaxTime,
+  ]);
 
-  const handleCategoryChange = useCallback((category: string, checked: boolean) => {
-    if (checked) {
-      setSelectedCategories(prev => [...prev, category]);
-    } else {
-      setSelectedCategories(prev => prev.filter(c => c !== category));
-    }
-  }, []);
+  const handleCategoryChange = useCallback(
+    (category: string, checked: boolean) => {
+      if (checked) {
+        setSelectedCategories(prev => [...prev, category]);
+      } else {
+        setSelectedCategories(prev => prev.filter(c => c !== category));
+      }
+    },
+    []
+  );
 
-  const handlePrepTimeChange = useCallback((time: string) => {
-    if (time === prepTimeFilter) {
-      setPrepTimeFilter('');
-      setCustomMinTime('');
-      setCustomMaxTime('');
-    } else {
-      setPrepTimeFilter(time);
-      setTopPrepTimeFilter('');
-      if (time !== 'Custom') {
+  const handlePrepTimeChange = useCallback(
+    (time: string) => {
+      if (time === prepTimeFilter) {
+        setPrepTimeFilter('');
         setCustomMinTime('');
         setCustomMaxTime('');
+      } else {
+        setPrepTimeFilter(time);
+        setTopPrepTimeFilter('');
+        if (time !== 'Custom') {
+          setCustomMinTime('');
+          setCustomMaxTime('');
+        }
       }
-    }
-  }, [prepTimeFilter]);
+    },
+    [prepTimeFilter]
+  );
 
   return {
     selectedCategories,
@@ -128,4 +151,3 @@ export function useFilters(): UseFiltersResult {
     handlePrepTimeChange,
   };
 }
-

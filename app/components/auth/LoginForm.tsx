@@ -46,7 +46,9 @@ export default function LoginForm({
         <div className="text-right">
           <button
             type="button"
-            onClick={() => toast.error('Password recovery is not available yet')}
+            onClick={() =>
+              toast.error('Password recovery is not available yet')
+            }
             className="text-lg text-[#FFE478] hover:text-[#FFE478]/80 transition-colors font-['Fira_Sans'] cursor-pointer"
           >
             Forgot password ?

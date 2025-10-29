@@ -4,7 +4,9 @@ interface RecipeImageSectionProps {
   recipe: Recipe;
 }
 
-export default function RecipeImageSection({ recipe }: RecipeImageSectionProps) {
+export default function RecipeImageSection({
+  recipe,
+}: RecipeImageSectionProps) {
   return (
     <div className="flex flex-col justify-center items-center py-6 gap-1.5 w-full max-w-[1344px] mx-auto">
       <div className="w-full aspect-4/3 relative">
@@ -37,4 +39,3 @@ export default function RecipeImageSection({ recipe }: RecipeImageSectionProps) 
     </div>
   );
 }
-

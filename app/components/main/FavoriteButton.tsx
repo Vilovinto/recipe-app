@@ -10,7 +10,10 @@ interface FavoriteButtonProps {
   className?: string;
 }
 
-export default function FavoriteButton({ recipeId, className = '' }: FavoriteButtonProps) {
+export default function FavoriteButton({
+  recipeId,
+  className = '',
+}: FavoriteButtonProps) {
   const { user } = useAuth();
   const [isFavorite, setIsFavorite] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -41,7 +44,7 @@ export default function FavoriteButton({ recipeId, className = '' }: FavoriteBut
         setIsFavorite(true);
         toast.success('Added to favorites');
       }
-      
+
       window.dispatchEvent(new CustomEvent('favoriteChanged'));
     } catch (error) {
       console.error('Error toggling favorite:', error);
@@ -74,4 +77,3 @@ export default function FavoriteButton({ recipeId, className = '' }: FavoriteBut
     </button>
   );
 }
-

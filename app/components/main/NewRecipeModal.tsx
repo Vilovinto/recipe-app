@@ -125,7 +125,7 @@ export default function NewRecipeModal({
       } catch (firebaseError) {
         console.log('Recipe will be stored locally only');
       }
-      
+
       const newRecipe: Recipe = {
         id: recipeId,
         title: recipeData.title,
@@ -143,7 +143,7 @@ export default function NewRecipeModal({
         createdAt: new Date(),
         updatedAt: new Date(),
       };
-      
+
       toast.success('Recipe created successfully!');
 
       onClose();
@@ -166,22 +166,22 @@ export default function NewRecipeModal({
       loading={loading}
       footer={
         <>
-                        <button
-                          type="button"
+          <button
+            type="button"
             onClick={onClose}
-              disabled={loading}
-              className="px-4 py-2 text-white bg-[rgba(255,255,255,0.1)] rounded-lg hover:bg-[rgba(255,255,255,0.2)] transition-colors disabled:opacity-50 font-['Fira_Sans']"
-            >
-              Cancel
-            </button>
-            <button
+            disabled={loading}
+            className="px-4 py-2 text-white bg-[rgba(255,255,255,0.1)] rounded-lg hover:bg-[rgba(255,255,255,0.2)] transition-colors disabled:opacity-50 font-['Fira_Sans']"
+          >
+            Cancel
+          </button>
+          <button
             type="button"
             onClick={handleSubmit}
-              disabled={loading}
-              className="px-6 py-2 bg-[#FFE478] text-[#0D0702] rounded-lg hover:bg-[#FFE478]/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed font-semibold font-['Fira_Sans']"
-            >
-              {loading ? 'Creating...' : 'Create Recipe'}
-            </button>
+            disabled={loading}
+            className="px-6 py-2 bg-[#FFE478] text-[#0D0702] rounded-lg hover:bg-[#FFE478]/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed font-semibold font-['Fira_Sans']"
+          >
+            {loading ? 'Creating...' : 'Create Recipe'}
+          </button>
         </>
       }
     >
@@ -189,7 +189,7 @@ export default function NewRecipeModal({
         <RecipeFormFields
           formData={formData}
           onInputChange={handleInputChange}
-          onCategoryChange={(category) => updateFormData({ category })}
+          onCategoryChange={category => updateFormData({ category })}
         />
         <RecipeImageUpload
           image={formData.image}

@@ -13,7 +13,10 @@ export default function RecipeInstructionsList({
 
       <div className="flex flex-col gap-2 w-full">
         {instructions.map((instruction, index) => (
-          <div key={index} className="flex flex-row items-baseline gap-1.5 w-full">
+          <div
+            key={index}
+            className="flex flex-row items-baseline gap-1.5 w-full"
+          >
             <span className="w-8 font-['Fira_Sans'] font-semibold text-[17px] leading-6 text-right text-[#E6D8D6] flex-none">
               {index + 1}.
             </span>
@@ -26,4 +29,3 @@ export default function RecipeInstructionsList({
     </div>
   );
 }
-

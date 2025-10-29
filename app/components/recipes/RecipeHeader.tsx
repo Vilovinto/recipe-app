@@ -58,4 +58,3 @@ export default function RecipeHeader({ recipe, onBack }: RecipeHeaderProps) {
     </div>
   );
 }
-
